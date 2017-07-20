@@ -446,6 +446,7 @@
     <Content Include="Views\Orders\_EditOrderId.cshtml" />
     <Content Include="Views\Report\_ReportLabor.cshtml" />
     <Content Include="Views\UserWork\ReportMonth.cshtml" />
+    <Content Include="Views\UserWork\_ManageDay.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

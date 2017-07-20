@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using GseWeb.Models.UserWork;
 
 namespace GseWeb.Controllers
 {
@@ -33,5 +34,21 @@ namespace GseWeb.Controllers
             var model = new Models.UserWork.HoursOfMonth(UserId, year, month);
             return View(model);
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Manager, TeamLeader, Employee")]
+        public PartialViewResult GetDay(int year = 0, int month = 0, int day = 0)
+        {
+            var UserId = User.Identity.Name;
+            year = (year == 0) ? DateTime.Now.Year : year;
+            month = (month == 0) ? DateTime.Now.Month : month;
+            day = (day == 0) ? DateTime.Now.Day : day;
+            // Se l'utente non e nullo signifa che chi sta visualizzando e il manager quindi faccio sparire i bottoni
+            var hYear = new HoursOfYear(UserId, year);
+            var model = hYear.Hours.FirstOrDefault(x => x.Date.Month == month && x.Date.Year == year);
+            // Aggiungo le liste
+            return PartialView("_ManagerDay",model);
+        }
+
     }
 }
