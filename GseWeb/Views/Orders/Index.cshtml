@@ -1,0 +1,103 @@
+﻿@model IEnumerable<GseWeb.Models.Orders.Order>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*Pupup*@
+<div id="popup" style="overflow:hidden; width:auto; height:auto"></div>
+<script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+<script src="~/Scripts/popup-1.1.js"></script>
+
+<h3>Commesse</h3>
+<p>@Html.ActionLink("Crea Nuova", "Create")</p>
+@if (TempData["Error"] != null)
+{
+    <div class="text-danger">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+<div class="form-group">
+    <input type="text" id="search" class="form-control pull-right" placeholder="Search" />
+</div>
+<table class="table gse-table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Client)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Hours)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FinishDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TeamLeaderId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Closed)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Client)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Hours)
+                </td>
+                <td style="text-align: right" nowrap>
+                    @item.Cost.ToString("0.00") €
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FinishDate)
+                </td>
+                <td>
+                    @item.TeamLeader.FirstName @item.TeamLeader.LastName
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Closed)
+                </td>
+                <td nowrap>
+                    <a style="cursor:pointer;" onclick="getPopup('@Url.Action("GetEditOrderId", "Orders" , new { OrderId = item.OrderId }, null)')">Modifica Codice</a> |
+                    @Html.ActionLink("Modifica", "Edit", new { id = item.OrderId }) |
+                    @Html.ActionLink("Utenti", "Users", new { id = item.OrderId, returnUrl = "/Orders/Index" }) |
+                    @Html.ActionLink("Elimina", "Delete", new { id = item.OrderId }, new { onclick = "return confirm('Sei sicuro di voler eliminare la commessa " + item.OrderId + " ?');" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    var $rows = $('.table tbody tr');
+    $('#search').keyup(function () {
+        var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+
+        $rows.show().filter(function () {
+            var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+            return !~text.indexOf(val);
+        }).hide();
+    });
+</script>

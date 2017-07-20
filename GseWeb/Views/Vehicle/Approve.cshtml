@@ -1,0 +1,111 @@
+﻿@model IEnumerable<GseWeb.Models.Vehicles.WorkVehicle>
+
+@{
+    ViewBag.Title = "Approve";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Approva Rimborsi Chilometrici</h2>
+@if (TempData["Success"] != null)
+{
+    <p class="text-success">@TempData["Success"]</p>
+}
+@if (TempData["Error"] != null)
+{
+    <p class="text-danger">@TempData["Error"]</p>
+}
+<table class="table table-condensed gse-table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                Utente
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.From)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.To)
+            </th>
+            <th style="text-align:right;">
+                @Html.DisplayNameFor(model => model.Km)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.RoundTrip)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VehicleDescription)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.StartHome)
+            </th>
+            <th style="text-align:right;">
+                @Html.DisplayNameFor(model => model.KmHomeWork)
+            </th>
+            <th style="text-align:right;">
+                @Html.DisplayNameFor(model => model.Km_Total)
+            </th>
+            <th style="text-align:right;">
+                @Html.DisplayNameFor(model => model.Cost_Km)
+            </th>
+            <th style="text-align:right;">
+                @Html.DisplayNameFor(model => model.Cost_Total_All)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink("Approva", "ApproveWorkVehicle", new { id = item.Id}, new { @Class = "btn btn-default btn-xs", @onclick = "return confirm('Vuoi Approvare?');" })
+                </td>
+                <td nowrap>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td nowrap>
+                    @item.User.LastName @item.User.FirstName
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.From)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.To)
+                </td>
+                <td style="text-align:right;">
+                    @Html.DisplayFor(modelItem => item.Km)
+                </td>
+                <td style="text-align:center;">
+                    @ShareCode.boolImg(item.RoundTrip)
+                </td>
+                <td nowrap>
+                    @Html.DisplayFor(modelItem => item.VehicleDescription)
+                </td>
+                <td style="text-align:center;">
+                    @ShareCode.boolImg(item.StartHome)
+                </td>
+                <td style="text-align:right;">
+                    @Html.DisplayFor(modelItem => item.KmHomeWork)
+                </td>
+                <td style="text-align:right;">
+                    @Html.DisplayFor(modelItem => item.Km_Total)
+                </td>
+                <td style="text-align:right;" nowrap>
+                    @Html.DisplayFor(modelItem => item.Cost_Km) €
+                </td>
+                <td style="text-align:right;" nowrap>
+                    @item.Cost_Total_All.ToString("0.00") €
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

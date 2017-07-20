@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<a class="btn btn-default btn-lg" href="@Url.Action("Index","Hours")">
+    <p>Gestione</p>
+    <p>Ore</p>
+</a>
+<a class="btn btn-default btn-lg" href="@Url.Action("ReportMonth","Report")">
+    <p>Ore</p>
+    <p>Mese in Corso</p>
+</a>
+<a class="btn btn-default btn-lg" href="@Url.Action("Index","Expense")">
+    <p>Rimborsi</p>
+    <p>Spese</p>
+</a>
+<a class="btn btn-default btn-lg" href="@Url.Action("Index","Vehicle")">
+    <p>Rimborsi</p>
+    <p>Chilometrici</p>
+</a>
+<hr />
+<div class="form-group thumbnail">
+    <h4>Dati per Fatturazione</h4>
+    <p><strong>G.S.E. Automation S.r.l.</strong> (Società unipersonale)</p>
+    <p><strong>Indirizzo:</strong> Via Confraternita, 26 - 12031, Bagnolo Piemonte (CN) - Italia</p>
+    <p><strong>P.IVA:</strong> 03565070046</p>
+    <p><strong>E-mail:</strong> amministrazione@gseautomation.it</p>
+    <p><strong>Tel:</strong> +39 0121032432</p>
+    <p><strong>Fax:</strong> +39 0121032432</p>
+    @*<a href="mailto:?subject=I wanted you to see this site&amp;body=Check out this site http://www.website.com."
+       title="Share by Email">
+        <img src="http://png-2.findicons.com/files/icons/573/must_have/48/mail.png">
+    </a>*@
+</div>

@@ -1,0 +1,19 @@
+﻿@using System.Globalization;
+@model GseWeb.Models.Hour
+
+@{
+    ViewBag.Title = "Hour";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var DayOfWeek = Model.Date.ToString("dddd", new CultureInfo("it-IT"));
+}
+
+<h4>@(DayOfWeek) - @Html.DisplayFor(model => model.Date)</h4>
+@if (Model != null && Model.Results != null)
+{
+    @Html.Partial("_Edit", Model)
+}
+else
+{
+    @Html.Partial("_Create", Model)
+}
+

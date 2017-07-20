@@ -1,0 +1,119 @@
+﻿@model GseWeb.Models.Report.ReportWorkOrder
+
+@{
+    ViewBag.Title = "Report Commesse";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    GseWeb.Models.Orders.WorkOrder workOrder = null;
+}
+@if (ViewBag.IsManager)
+{
+    @Html.ActionLink("Indietro", "ReportUsers", "Report", new { year = Model.Year, month = Model.Month }, null)
+}
+<h3>
+    @if (!ViewBag.IsManager)
+    {
+        <span>
+            <button class="btn btn-default selectmonth">
+                <span class="glyphicon glyphicon-calendar">
+                </span>
+            </button>
+        </span>
+    }
+    <span>Ore Commesse</span>
+    <strong> @ShareCode.MonthIT(Model.Month) @Model.Year</strong>
+</h3>
+
+<div class="form-group">
+    <input type="text" id="search" class="form-control pull-right" placeholder="Search" />
+</div>
+
+<h4> @Model.User.LastName @Model.User.FirstName </h4>
+<table class="table table-condensed gse-table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => workOrder.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => workOrder.OrderId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => workOrder.Order.Client)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => workOrder.Order.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => workOrder.Hours)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => workOrder.Approved)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.WorkOrders)
+        {
+            <tr>
+                <td nowrap>
+                    @ShareCode.DayWeekIT(item.Date)
+                    @Html.DisplayFor(modelItem => item.Date.Day)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Order.Client)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Order.Description)
+                </td>
+                <td>
+                    @ShareCode.HHmmString(item.Hours)
+                </td>
+                <td style="text-align:center;">
+                    @ShareCode.boolOKNOK(item.Approved)
+                </td>
+                <td>
+                    @if (item.Note != null)
+                    {
+                        <button class="btn btn-default btn-xs" onclick="alert('@item.Note');" style="background-color: #FEFE30" title="Note">
+                            <span class="glyphicon glyphicon-tag"></span>
+                        </button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@*Gestione DatePicker*@
+<script src="~/Scripts/bootstrap-datepicker.min.js"></script>
+<script>
+    $('.selectmonth').datepicker({
+        startView: 1,
+        minViewMode: 1,
+        maxViewMode: 2,
+        language: "it",
+        keyboardNavigation: false,
+        autoclose: true,
+    });
+
+    $('.selectmonth').datepicker().on('changeDate', function (e) {
+        var year = e.date.getFullYear();
+        var month = e.date.getMonth() + 1;
+        window.location = '/Report/ReportWorkOrders?year=' + year + '&month=' + month;
+    });
+
+    // Cerca
+    var $rows = $('.table tbody tr');
+    $('#search').keyup(function () {
+        var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+
+        $rows.show().filter(function () {
+            var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+            return !~text.indexOf(val);
+        }).hide();
+    });
+</script>

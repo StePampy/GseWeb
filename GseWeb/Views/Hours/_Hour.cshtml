@@ -1,0 +1,129 @@
+﻿@using System.Globalization;
+@model GseWeb.Models.Hours.IHour
+@{
+    var CInfIT = CultureInfo.CreateSpecificCulture("it-IT");
+    var DayOfWeek = CInfIT.TextInfo.ToTitleCase(CInfIT.DateTimeFormat.GetDayName(Model.Date.DayOfWeek));
+}
+
+<div id="HourContainer">
+    @*<h4>
+            <button class="btn btn-default selectday">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </button>
+            <span>@DayOfWeek - @Model.Date.ToString("dd/MM/yyy")</span>
+        </h4>*@
+
+    @*<br />
+        <div class="form-horizontal" style="padding: 0px;" >
+            <div class="form-group">
+                <div class="col-*-5">
+                    <div class="form-control col-xs-5" style="border:none; padding:0px;">
+                        <input type="button" id="SubDate" value="<" class="btn btn-default" />
+                        <span>ciao</span>
+                        <input type="button" id="AddDate" value=">" class="btn btn-default pull-right" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-control bg-primary" style="border:none; padding:0px;">
+                <input type="button" id="SubDate" value="<" class="btn btn-default" />
+                <span>ciao</span>
+                <input type="button" id="AddDate" value=">" class="btn btn-default pull-right" />
+            </div>
+        </div>
+        <br />
+        <br />*@
+    <br />
+    <div class="col-lg-5 col-md-5" style="border:none; padding:0px;">
+        <input type="button" id="SubDate" value="<" class="btn btn-default" />
+        <strong class="text-center">@DayOfWeek - @Model.Date.ToString("dd/MM/yyy")</strong>
+        <input type="button" id="AddDate" value=">" class="btn btn-default pull-right" />
+    </div>
+    @*<div>
+            <table>
+                <tr>
+                    <td><input type="button" id="SubDate" value="<" class="btn btn-default" /></td>
+                    <td><h4 class="control-label"> @DayOfWeek - @Model.Date.ToString("dd/MM/yyy") </h4></td>
+                    <td><input type="button" id="AddDate" value=">" class="btn btn-default" /></td>
+                </tr>
+            </table>
+        </div>*@
+    <br />
+    <br />
+    <div>
+        @if (Model != null && Model.Results != null)
+        {
+            @Html.Partial("_Edit", Model.Results)
+        }
+        else
+        {
+            @Html.Partial("_Create", Model)
+        }
+    </div>
+</div>
+
+@*Gestione DatePicker*@
+@*<script src="~/Scripts/bootstrap-datepicker.min.js"></script>
+    <script>
+        $('.selectday').datepicker({
+            startView: 0,
+            minViewMode: 0,
+            language: "it",
+            keyboardNavigation: false,
+            autoclose: true,
+        });
+
+        $('.selectday').datepicker().on('changeDate', function (e) {
+            var year = e.date.getFullYear();
+            var month = e.date.getMonth() + 1;
+            window.location = '/Report/ReportMonth?year=' + year + '&month=' + month;
+        });
+    </script>*@
+
+<script type="text/javascript">
+    $(function () {
+
+        $('#SubDate').click(function () {
+            $.post('@Url.Action("Hour", "Hours", new { DateTicks = (Model.Date.AddDays(-1)).Ticks }, null)')
+                .always(function (data) {
+                    $('#HourContainer').html(data);
+                })
+        });
+
+        $('#AddDate').click(function () {
+            $.post('@Url.Action("Hour", "Hours", new { DateTicks = (Model.Date.AddDays(1)).Ticks }, null)')
+                .always(function (data) {
+                    $('#HourContainer').html(data);
+                })
+        });
+
+        $('#EditHour').submit(function (e) {
+            e.preventDefault(); //prevent submit
+            $.ajax({
+                type: "POST",
+                url: "/Hours/Edit",
+                data: $('#EditHour').serialize(),
+                datatype: "html",
+                success: function (data) {
+                    $('#HourContainer').html('');
+                    $('#HourContainer').html(data);
+                }
+            });
+            //return false;
+        });
+
+        $('#CreateHour').submit(function (e) {
+            e.preventDefault(); //prevent submit
+            $.ajax({
+                type: "POST",
+                url: "/Hours/Create",
+                data: $('#CreateHour').serialize(),
+                datatype: "html",
+                success: function (data) {
+                    $('#HourContainer').html('');
+                    $('#HourContainer').html(data);
+                }
+            });
+            //return false;
+        });
+    });
+</script>

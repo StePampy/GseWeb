@@ -1,0 +1,62 @@
+﻿/*Non Stampa bottoni*/
+/*@media print {
+    a, button {
+        display: none !important;
+    }
+}*/
+
+.gse-table > tbody > tr:nth-child(even) {
+    background-color: #eee;
+}
+
+.gse-table-header > thead > tr {
+    background-color: #376092;
+    color: #ffffff !important;
+}
+
+.gse-table > thead > tr {
+    background-color: #376092;
+    color: #ffffff !important;
+}
+
+.gse-table-select > tbody > tr:hover {
+    background-color: #F5F5F5;
+    cursor: pointer;
+}
+
+.gse-tbody-select > tr:hover {
+    background-color: #F5F5F5;
+    cursor: pointer;
+}
+
+.text-green {
+    color: green;
+}
+
+.text-red {
+    color: red;
+}
+
+.text-gray {
+    color: gray;
+}
+
+.bg-whitesmoke {
+    background-color: whitesmoke;
+}
+
+.bg-info {
+  background-color: #d9edf7;
+}
+
+.bg-warning {
+  background-color: #fcf8e3;
+}
+
+.bg-success {
+  background-color: #dff0d8;
+}
+
+.bg-danger {
+  background-color: #f2dede;
+}

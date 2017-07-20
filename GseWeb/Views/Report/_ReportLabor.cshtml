@@ -1,0 +1,66 @@
+﻿@model GseWeb.Models.Report.ReportLabor
+
+@{
+    var CInfIT = System.Globalization.CultureInfo.CreateSpecificCulture("it-IT");
+}
+
+<h4>
+    <strong> @ShareCode.MonthIT(Model.Month) @Model.Year</strong>
+    <br />
+    @Model.User.LastName @Model.User.FirstName
+</h4>
+<table class="table table-condensed gse-table">
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th colspan="3">Ore</th>
+            <th colspan="2">Rimborso Km</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Days)
+        {
+            <tr>
+                <td nowrap>
+                    @ShareCode.DayWeekIT(item.Date)
+                    @Html.DisplayFor(modelItem => item.Date.Day)
+                </td>
+                <td>
+                    @if (@item.WorkOrder != null)
+                    {
+                        @ShareCode.HHmmString(item.WorkOrder.Hours)
+                    }
+                </td>
+                <td>
+                    @if (@item.WorkOrder != null)
+                    {
+                        @item.WorkOrder.Cost.ToString("C", CInfIT)
+                    }
+                </td>
+                <td style="text-align:center;">
+                    @if (@item.WorkOrder != null)
+                    {
+                        @ShareCode.boolOKNOK(@item.WorkOrder.Approved)
+                    }
+                </td>
+                <td>
+                    @if (@item.WorkVehicle != null)
+                    {
+                        @item.WorkVehicle.Cost_Total_All.ToString("C", CInfIT)
+                    }
+                </td>
+                <td style="text-align:center;">
+                    @if (@item.WorkVehicle != null)
+                    {
+                        @ShareCode.boolOKNOK(@item.WorkVehicle.Approved)
+                    }
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    $("#popup").dialog('option', 'title', '@ViewBag.Title');
+</script>
+

@@ -1,0 +1,91 @@
+﻿@using System.Globalization;
+@model IEnumerable<GseWeb.Models.Report.ReportUser>
+
+@{
+    ViewBag.Title = "ReportUsers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var CInfIT = CultureInfo.CreateSpecificCulture("it-IT");
+    var MonthName = CInfIT.TextInfo.ToTitleCase(CInfIT.DateTimeFormat.GetMonthName((int)ViewBag.Month));
+}
+
+<h3>
+    <span>
+        <button class="btn btn-default selectmonth">
+            <span class="glyphicon glyphicon-calendar"></span>
+        </button>
+    </span>
+    <span>Report Utenti</span>
+    <strong> @MonthName @ViewBag.Year</strong>
+    <span class="pull-right">
+        @if (ViewBag.MonthFrozen)
+        {
+            <a class="btn btn-default" title="Sblocca Mese" onclick="return confirm('Sei sicuro di voler sbloccare questo mese?');" href="@Url.Action("FreezeMonth", new { year = ViewBag.Year, month = ViewBag.Month})">
+                <span class="glyphicon glyphicon-lock text-danger"></span>
+                <span class="text-danger">Mese Bloccato</span>
+            </a>
+        }
+        else
+        {
+            <a class="btn btn-default" title="Blocca Mese" onclick="return confirm('Sei sicuro di voler bloccare questo mese?');" href="@Url.Action("FreezeMonth", new { year = ViewBag.Year, month = ViewBag.Month})">
+                <span class="glyphicon glyphicon-lock text-success"></span>
+                <span class="text-success">Mese Sbloccato</span>
+            </a>
+        }
+    </span>
+</h3>
+
+<table class="table gse-table">
+    <thead>
+        <tr>
+            <th>
+                Utente
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserInfo)
+                </td>
+                <td nowrap>
+                    @Html.ActionLink("Dettagli Utente", "Details", "Account", new { UserId = item.UserId, returnUrl = "/Report/ReportUsers?year=" + ViewBag.Year + "&month=" + ViewBag.Month }, new { @class = "btn btn-default" })
+                    @Html.ActionLink("Visualizza Ore", "ReportMonth", "Report", new { year = ViewBag.Year, month = ViewBag.Month, UserId = item.UserId }, new { @class = "btn btn-default" })
+                    @Html.ActionLink("Rimborsi Chilometrici", "Index", "Vehicle", new { year = ViewBag.Year, month = ViewBag.Month, UserId = item.UserId }, new { @class = "btn btn-default" })
+                    @Html.ActionLink("Ore Commesse", "ReportWorkOrders", "Report", new { year = ViewBag.Year, month = ViewBag.Month, UserId = item.UserId }, new { @class = "btn btn-default" })
+                    @*@Html.ActionLink("Visualizza Ore", "ReportMonth", "Report", new { year = ViewBag.Year, month = ViewBag.Month, UserId = item.UserId }, new { @class = "btn btn-default" })*@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@*Gestione DatePicker*@
+<script src="~/Scripts/bootstrap-datepicker.min.js"></script>
+<script>
+    $('.selectmonth').datepicker({
+        startView: 1,
+        minViewMode: 1,
+        maxViewMode: 2,
+        language: "it",
+        keyboardNavigation: false,
+        autoclose: true,
+    });
+
+    $('.selectmonth').datepicker().on('changeDate', function (e) {
+        var year = e.date.getFullYear();
+        var month = e.date.getMonth() + 1;
+        window.location = '/Report/ReportUsers?year=' + year + '&month=' + month;
+    });
+</script>
+
+@*Rsposta del blocco del mese*@
+@if (TempData["AlertMessage"] != null)
+{
+    <script>
+        alert('@TempData["AlertMessage"]');
+    </script>
+}

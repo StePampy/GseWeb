@@ -1,0 +1,140 @@
+﻿@using System.Globalization;
+@model IEnumerable<GseWeb.Models.Report.ReportOrderDetails>
+
+@{
+    ViewBag.Title = "Report Orders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var CInfIT = CultureInfo.CreateSpecificCulture("it-IT");
+}
+
+
+
+<h2>Report Commesse</h2>
+<div class="form-group">
+    <input type="text" id="search" class="form-control pull-right" placeholder="Search" />
+</div>
+
+<table class="table table-condensed gse-table gse-table-select">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Client)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TeamLeaderInfo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExpectedCost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cost_Total)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cost_Labor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cost_Various)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cost_Materials)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.ExpectedHours)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WorkHours)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RemainingHours)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NotApprovedHours)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.FinishDate)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.UsersInfo)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr onclick="location.href = '@(Url.Action("ReportOrder", "Report", new { OrderId = item.OrderId }))'">
+                <td>
+                    @Html.ActionLink("Utenti", "Users", "Orders", new { id = item.OrderId, returnUrl = "/Report/ReportOrders" }, new { @Class = "btn btn-default btn-xs" })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Client)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TeamLeaderInfo)
+                </td>
+                <td nowrap>
+                    @item.ExpectedCost.ToString("C", CInfIT)
+                </td>
+                <td nowrap>
+                    @item.Cost_Total.ToString("C", CInfIT)
+                </td>
+                <td nowrap>
+                    @item.Cost_Labor.ToString("C", CInfIT)
+                </td>
+                <td nowrap>
+                    @item.Cost_Various.ToString("C", CInfIT)
+                </td>
+                <td nowrap>
+                    @item.Cost_Materials.ToString("C", CInfIT)
+                </td>
+                @*<td>
+                    @ShareCode.HHmmString(item.ExpectedHours)
+                </td>
+                <td>
+                    @ShareCode.HHmmString(item.WorkHours)
+                </td>
+                <td>
+                    @ShareCode.HHmmString(item.RemainingHours)
+                </td>
+                <td>
+                    @ShareCode.HHmmString(item.NotApprovedHours)
+                </td>*@
+                <td nowrap>
+                    @Html.DisplayFor(modelItem => item.FinishDate)
+                </td>
+                <td nowrap style="font-size:9px">
+                    <ul>
+                        @foreach (var u in item.UsersInfo)
+                        {
+                            <li>@u</li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    var $rows = $('.table tbody tr');
+    $('#search').keyup(function () {
+        var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+
+        $rows.show().filter(function () {
+            var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+            return !~text.indexOf(val);
+        }).hide();
+    });
+</script>

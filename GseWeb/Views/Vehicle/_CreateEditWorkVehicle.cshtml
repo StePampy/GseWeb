@@ -1,0 +1,148 @@
+﻿@model GseWeb.Models.Vehicles.WorkVehicle
+
+@{
+    GseWeb.Models.Vehicles.Route[] Routes = (GseWeb.Models.Vehicles.Route[])ViewBag.Routes;
+    var lstUserOrders = (IEnumerable<SelectListItem>)ViewBag.lstUserOrders;
+}
+
+<datalist id="FromList">
+    @foreach (var s in Routes.Select(x => x.From).Distinct())
+    {
+        <option value="@s" />
+    }
+</datalist>
+
+<datalist id="ToList">
+    @foreach (var s in Routes.Select(x => x.To).Distinct())
+    {
+        <option value="@s" />
+    }
+</datalist>
+@using (Html.BeginForm("CreateEditWorkVehicle", "Vehicle", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @id = "BeginForm" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.UserId)
+        @Html.HiddenFor(model => model.VehicleDescription)
+        @Html.HiddenFor(model => model.KmHomeWork)
+        @Html.HiddenFor(model => model.Cost_Km)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Date, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.OrderId, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.DropDownListFor(model => model.OrderId, lstUserOrders, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.OrderId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.From, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.From, new { htmlAttributes = new { @id = "tbFrom", @class = "form-control", @list = "FromList" } })
+                @Html.ValidationMessageFor(model => model.From, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.To, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.To, new { htmlAttributes = new { @id = "tbTo", @class = "form-control", @list = "ToList" } })
+                @Html.ValidationMessageFor(model => model.To, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Km, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Km, new { htmlAttributes = new { @id = "tbKm", @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Km, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RoundTrip, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7 form-control-static">
+                @Html.CheckBoxFor(model => model.RoundTrip)
+                @Html.ValidationMessageFor(model => model.Km, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.VehicleDescription, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                <p class="form-control-static">@Model.VehicleDescription</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.KmHomeWork, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                <p class="form-control-static">@Model.KmHomeWork Km</p>
+                @Html.CheckBoxFor(model => model.StartHome)
+                <span>Tragitto Casa</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Cost_Km, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                <p class="form-control-static">@Model.Cost_Km €</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-6">
+                <input type="submit" value="Salva" class="btn btn-default" />
+                <input type="button" value="Annulla" class="btn btn-default" onclick="closePopup();"/>
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $("#popup").dialog('option', 'title', '@ViewBag.Title');
+    var _Routes = @Html.Raw(Json.Encode(Routes));
+    $("#tbFrom").change(function() {
+        SearchKm();
+    });
+    $("#tbTo").change(function() {
+        SearchKm();
+    });
+    function SearchKm(){
+        var From = $("#tbFrom").val().toLowerCase();
+        var To = $("#tbTo").val().toLowerCase();
+        var Res = _Routes.filter(function(x) { return x.From.toLowerCase() === From && x.To.toLowerCase() === To; });
+        if (Res.length > 0) {
+            $("#tbKm").val(Res[0].Km);
+            $("#tbFrom").val(Res[0].From);
+            $("#tbTo").val(Res[0].To);
+        }else {
+            $("#tbKm").val("");
+        }
+    }
+
+    $('#BeginForm').submit(function (e) {
+        e.preventDefault(); //prevent submit
+        $.ajax({
+            type: "POST",
+            url: "/Vehicle/CreateEditWorkVehicle",
+            data: $('#BeginForm').serialize(),
+            datatype: "html",
+            success: function (data) {
+                $('#popup').html(data);
+            }
+        });
+        //return false;
+    });
+</script>

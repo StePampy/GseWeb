@@ -1,0 +1,70 @@
+﻿@model IEnumerable<GseWeb.Models.Orders.ApproveHour>
+
+@{
+    ViewBag.Title = "ApproveHours";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Approva Ore</h2>
+@if (TempData["Success"] != null)
+{
+    <p class="text-success">@TempData["Success"]</p>
+}
+@if (TempData["Error"] != null)
+{
+    <p class="text-danger">@TempData["Error"]</p>
+}
+<table class="table table-condensed gse-table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Hours)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserInfo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderClient)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderDescription)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink("Approva", "ApproveHour", new { UserId = item.UserId, OrderId = item.OrderId, Date = item.Date }, new { @Class = "btn btn-default btn-xs", @onclick = "return confirm('Vuoi Approvare " + item.OrderId + " - " + item.Date + " - " + item.UserInfo + "?');" })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @ShareCode.HHmmString(item.Hours)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserInfo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderClient)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderDescription)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

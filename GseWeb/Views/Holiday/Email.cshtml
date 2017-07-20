@@ -1,0 +1,50 @@
+﻿@model GseWeb.Models.Holiday.Holiday
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Richiesta @Model.Type.ToString()</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <h2>Richesta @Model.Type.ToString()</h2>
+    <p>Io sottoscritto <strong>@Model.User.LastName @Model.User.FirstName</strong> con la presente</p>
+    @if (Model.Type == GseWeb.Models.Holiday.Holiday_Type.Ferie)
+    {
+        <p>chiedo di poter usufruire n. <strong>@Model.Days</strong> giorni di Ferie</p>
+        <p>dal giorno <strong>@Model.Date_From.ToString("dd/MM/yyyy")</strong> al giorno <strong>@Model.Date_To.ToString("dd/MM/yyyy")</strong>.</p>
+        <p>Note: <strong>@Model.Request_Note</strong></p>
+    }
+    else
+    {
+        <p>chiedo di poter usufruire n. <strong>@Model.Hours</strong> ore per <strong>@Model.Type.ToString()</strong></p>
+        <p>il giorno <strong>@Model.Date_From.ToString("dd/MM/yyyy")</strong></p>
+        <p>dalle ore <strong>@Model.Time_From</strong> alle ore <strong>@Model.Time_To</strong>.</p>
+        <p>Per la seguente motivazione: <strong>@Model.Request_Note</strong></p>
+    }
+    <p>Data: <strong>@Model.Request_Date.ToString("dd/MM/yyyy")</strong></p>
+    
+    @if (Model.Status != GseWeb.Models.Holiday.Status_Request.Attesa && Model.UserApproveId != null)
+    {
+        var cls = (Model.Status == GseWeb.Models.Holiday.Status_Request.Approvata) ? "text-success" : "text-danger";
+        <hr />
+        <p>La richiesta è stata <strong class="@cls">@Model.Status.ToString()</strong> da <strong>@Model.UserApprove.LastName @Model.UserApprove.FirstName</strong>.</p>
+        <p>Data: <strong>@Model.Response_Date.ToString("dd/MM/yyyy")</strong></p>
+        <p>Note: <strong>@Model.Response_Note</strong></p>
+    }else
+	{
+        <a href='@Url.Action("Manage", "Holiday", new { year = Model.Date_From.Year}, Request.Url.Scheme)'>Vai a Gestione Ferie e Permessi</a>
+	}
+</body>
+</html>

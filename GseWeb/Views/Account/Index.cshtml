@@ -1,0 +1,67 @@
+﻿@model IEnumerable<GseWeb.Models.Account.User>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Gestione Utenti</h2>
+
+<p>
+    @Html.ActionLink("Crea Nuovo", "Create")
+</p>
+<table class="table gse-table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserRole.Value)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HoursProfile.Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserRole.Value)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HoursProfile.Description)
+                </td>
+                <td>
+                    @Html.ActionLink("Modifica", "Edit", new { UserId = item.UserId }) |
+                    @Html.ActionLink("Dettagli", "Details", new { UserId = item.UserId, returnUrl = "/Account/Index" }) |
+                    @Html.ActionLink("Elimina", "Delete", new { UserId = item.UserId })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@if (TempData["Success"] != null)
+{
+    <div class="text-success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}

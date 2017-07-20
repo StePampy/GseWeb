@@ -1,0 +1,196 @@
+﻿@using System.Globalization;
+@model GseWeb.Models.MonthReport
+
+@{
+    ViewBag.Title = string.Format("{0} - {1}", new DateTime(Model.Year, Model.Month, 1).ToString("MMMM", new CultureInfo("it-IT")), Model.Year);
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    GseWeb.Models.DateReport dateReport = null;
+    //GseWeb.Models.MonthTotal monthTotal = null;
+}
+
+@* Per Stampa *@
+<style>
+    @@media print {
+        a, button {
+            display: none !important;
+        }
+    }
+</style>
+
+<div>
+    <div class="col-xs-6 visible-lg visible-md" > 
+        <h3>
+            <span>
+                <button class="btn btn-default selectmonth">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </button>
+            </span>
+            <span>@(ViewBag.Title)</span>
+        </h3>
+        <h4>@(Model.UserFirstName) @(Model.UserLastName)</h4>
+    </div>
+    
+    <div class="col-xs-6 visible-sm visible-xs">
+        <h3>
+            <span>
+                <button class="btn btn-default selectmonth">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </button>
+            </span>
+            <span>@(string.Format("{0}/{1}", Model.Month, Model.Year))</span>
+        </h3>
+        <h4>@(Model.UserFirstName) @(Model.UserLastName)</h4>
+    </div>
+   
+     <div class="col-xs-6">
+        <table class="table table-condensed" style="font-size: 12px;">
+            @foreach (var item in Model.Totals)
+            {
+                <tr bgcolor="@ShareCode.WorkTypeColor(item.WorkTypeId)" style="font-weight:bold">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @ShareCode.HHmmString(item.Value)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+<table class="table table-condensed">
+    <tr bgcolor="#376092" style="color: white;">
+        <th></th>
+        <th colspan="2">
+            @Html.DisplayNameFor(model => dateReport.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => dateReport.Hour.Start)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => dateReport.Hour.End)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => dateReport.Hour.Break)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => dateReport.Hour.Results.WorkTime)
+        </th>
+        <th>
+            Extra
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => dateReport.Hour.Travel)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => dateReport.Hour.OffSite)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => dateReport.Hour.WorkTypeDesc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => dateReport.Hour.Note)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Dates)
+    {
+        //Colori
+        var bgc = "";
+        if (item.Hour != null)
+        {
+            bgc = ShareCode.WorkTypeColor(item.Hour.WorkTypeId);
+        }
+        bgc = ShareCode.DayWeekColor((int)item.Date.DayOfWeek, item.Festivity, bgc);
+
+        <tr bgcolor="@(bgc)" style="font-size: 12px;">
+            @if (item.Hour != null)
+            {
+                <td>
+                    @Html.ActionLink("Edit", "Edit", "Hours", new { DateTicks = item.Date.Date.Ticks, returnUrl = ViewBag.ReturnUrl }, new { @class = "btn btn-default btn-xs" })
+                </td>
+                <td>
+                    @ShareCode.ddMMString(item.Date)
+                </td>
+                <td>
+                    @ShareCode.DayWeekIT(item.Date)
+                </td>
+                <td>
+                    @ShareCode.HHmmString(item.Hour.Start)
+                </td>
+                <td>
+                    @ShareCode.HHmmString(item.Hour.End)
+                </td>
+                <td>
+                    @ShareCode.HHmmString(item.Hour.Break)
+                </td>
+                <td style="font-weight:bold">
+                    @ShareCode.HHmmString(item.Hour.Results.WorkTime)
+                </td>
+                <td>
+                    @if (item.Hour.WorkTypeId == 2)
+                    {
+                        @ShareCode.HHmmString(item.Hour.Results.DiffTime)
+                    }
+                </td>
+                <td>
+                    @ShareCode.HHmmString(item.Hour.Travel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Hour.OffSite)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Hour.WorkTypeDesc)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Hour.Note)
+                </td>
+                <td nowrap>
+                    @Html.ActionLink("Delete", "Delete", "Hours", new { DateTicks = item.Date.Date.Ticks, returnUrl = ViewBag.ReturnUrl }, new { @class = "btn btn-default btn-xs" })
+                </td>
+            }
+            else
+            {
+                <td>
+                    @Html.ActionLink("Add", "Create", "Hours", new { DateTicks = item.Date.Date.Ticks, returnUrl = ViewBag.ReturnUrl }, new { @class = "btn btn-default btn-xs" })
+                </td>
+                <td>
+                    @ShareCode.ddMMString(item.Date)
+                </td>
+                <td>
+                    @ShareCode.DayWeekIT(item.Date)
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            }
+        </tr>
+    }
+
+</table>
+
+<script>
+    $('.selectmonth').datepicker({
+        startView: 1,
+        minViewMode: 1,
+        language: "it",
+        keyboardNavigation: false,
+        autoclose: true,
+    });
+
+    $('.selectmonth').datepicker().on('changeDate', function (e) {
+        var year = e.date.getFullYear();
+        var month = e.date.getMonth() + 1;
+        window.location = '/Hours/ReportMonth?year=' + year + '&month=' + month;
+    });
+</script>
+

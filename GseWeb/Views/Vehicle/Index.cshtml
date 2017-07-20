@@ -1,0 +1,220 @@
+﻿@using System.Globalization;
+@model GseWeb.Models.Vehicles.VehicleVM
+
+@{
+    ViewBag.Title = "Rimborsi Chilometrici";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    GseWeb.Models.Vehicles.UserVehicle userVehicle = null;
+    GseWeb.Models.Vehicles.WorkVehicle workVehicle = null;
+}
+@if (ViewBag.IsManager)
+{
+    @Html.ActionLink("Indietro", "ReportUsers", "Report", new { year = Model.Year, month = Model.Month }, null)
+}
+<div id="popup" style="overflow:hidden; width:auto; height:auto"></div>
+<h3>
+    @if (!ViewBag.IsManager)
+    {
+        <span>
+            <button class="btn btn-default selectmonth">
+                <span class="glyphicon glyphicon-calendar">
+                </span>
+            </button>
+        </span>
+    }
+    <span>Rimborsi Chilometrici</span>
+    <strong> @ShareCode.MonthIT(Model.Month) @Model.Year</strong>
+</h3>
+<h4>@Model.User.LastName @Model.User.FirstName</h4>
+<hr />
+@if (!ViewBag.IsManager)
+{
+    <a class="btn btn-default btn-xs" style="margin-bottom: 2px;" onclick="getPopup('@Url.Action("CreateUserVehicle", "Vehicle" , null, null)')">
+        <span class="glyphicon glyphicon-plus-sign text-success"></span>
+        Nuovo Veicolo
+    </a>
+    <table class="table table-condensed gse-table noprint">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => userVehicle.VehicleDescription)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => userVehicle.KmHomeWork)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => userVehicle.Cost)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.UserVehicles)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VehicleDescription)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.KmHomeWork)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Cost)
+                    </td>
+                    <td nowrap>
+                        <input type="button" class="btn btn-default btn-xs" value="Nuovo Percorso" onclick="getPopup('@Url.Action("CreateWorkVehicle", "Vehicle" , new { VehicleId=item.Id }, null)')" />
+                        <input type="button" class="btn btn-default btn-xs" value="Modifica" onclick="getPopup('@Url.Action("EditUserVehicle", "Vehicle" , new { Id=item.Id }, null)')" />
+                        @Html.ActionLink("Elimina", "DeleteUserVehicle", "Vehicle", new { id = item.Id, year = Model.Year, month = Model.Month }, new { @class = "btn btn-default btn-xs", @onclick = "return confirm('Sicuro di Voler Eliminare?');" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <h4 class="noprint">Percorsi</h4>
+}
+<table class="table table-condensed gse-table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => workVehicle.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => workVehicle.OrderId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => workVehicle.From)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => workVehicle.To)
+            </th>
+            <th style="text-align:right;">
+                @Html.DisplayNameFor(model => workVehicle.Km)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => workVehicle.RoundTrip)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => workVehicle.VehicleDescription)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => workVehicle.StartHome)
+            </th>
+            <th style="text-align:right;">
+                @Html.DisplayNameFor(model => workVehicle.KmHomeWork)
+            </th>
+            <th style="text-align:right;">
+                @Html.DisplayNameFor(model => workVehicle.Km_Total)
+            </th>
+            <th style="text-align:right;">
+                @Html.DisplayNameFor(model => workVehicle.Cost_Km)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => workVehicle.Approved)
+            </th>
+            <th style="text-align:right;">
+                @Html.DisplayNameFor(model => workVehicle.Cost_Total)
+            </th>
+            @if (!ViewBag.IsManager)
+            {
+                <th></th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.WorkVehicles)
+        {
+            <tr>
+                <td nowrap>
+                    @ShareCode.DayWeekIT(item.Date)
+                    @Html.DisplayFor(modelItem => item.Date.Day)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.From)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.To)
+                </td>
+                <td style="text-align:right;">
+                    @Html.DisplayFor(modelItem => item.Km)
+                </td>
+                <td style="text-align:center;">
+                    @ShareCode.boolImg(item.RoundTrip)
+                </td>
+                <td nowrap>
+                    @Html.DisplayFor(modelItem => item.VehicleDescription)
+                </td>
+                <td style="text-align:center;">
+                    @ShareCode.boolImg(item.StartHome)
+                </td>
+                <td style="text-align:right;">
+                    @Html.DisplayFor(modelItem => item.KmHomeWork)
+                </td>
+                <td style="text-align:right;">
+                    @Html.DisplayFor(modelItem => item.Km_Total)
+                </td>
+                <td style="text-align:right;">
+                    @Html.DisplayFor(modelItem => item.Cost_Km)
+                </td>
+                <td style="text-align:center;">
+                    @ShareCode.boolOKNOK(item.Approved)
+                    @if (ViewBag.IsManager)
+                    {
+                        <span class="noprint">@item.UserApprove</span>
+                    }
+                </td>
+                <td style="text-align:right;">
+                    @item.Cost_Total.ToString("0.00")
+                </td>
+                @if (!ViewBag.IsManager)
+                {
+                    <td nowrap>
+                        <input type="button" class="btn btn-default btn-xs" value="Modifica" onclick="getPopup('@Url.Action("EditWorkVehicle", "Vehicle" , new { Id=item.Id}, null)')" />
+                        @Html.ActionLink("Elimina", "DeleteWorkVehicle", "Vehicle", new { id = item.Id, year = Model.Year, month = Model.Month }, new { @class = "btn btn-default btn-xs", @onclick = "return confirm('Sicuro di Voler Eliminare?');" })
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+    <tr>
+        <td colspan="10"></td>
+        <td bgcolor="#FFD966" style="text-align:right;"><strong>TOTALE</strong></td>
+        <td bgcolor="#FFD966" style="text-align:right;" nowrap><strong>Km @Model.Km_Total</strong></td>
+        <td bgcolor="#FFD966" style="text-align:right;" nowrap><strong>€ @Model.Cost_Total.ToString("0.00")</strong></td>
+        <td></td>
+    </tr>
+</table>
+@*Pupup*@
+<script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+<script src="~/Scripts/popup-1.1.js"></script>
+
+@*Gestione DatePicker*@
+<script src="~/Scripts/bootstrap-datepicker.min.js"></script>
+<script>
+    $('.selectmonth').datepicker({
+        startView: 1,
+        minViewMode: 1,
+        maxViewMode: 2,
+        language: "it",
+        keyboardNavigation: false,
+        autoclose: true,
+    });
+
+    $('.selectmonth').datepicker().on('changeDate', function (e) {
+        var year = e.date.getFullYear();
+        var month = e.date.getMonth() + 1;
+        window.location = '/Vehicle/Index?year=' + year + '&month=' + month;
+    });
+</script>
+
+@*Risposta di eliminazione*@
+@if (TempData["DeleteMessage"] != null)
+{
+    <script>
+        alert('@TempData["DeleteMessage"]');
+    </script>
+}
+

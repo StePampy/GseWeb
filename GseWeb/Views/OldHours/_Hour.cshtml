@@ -1,0 +1,79 @@
+﻿@using System.Globalization;
+@model GseWeb.Models.Hours.Hour
+
+
+@{ 
+    var DayOfWeek = Model.Date.ToString("dddd", new CultureInfo("it-IT"));
+}
+
+<div id="HourContainer">
+    <div>
+        <table>
+            <tr>
+                <td><input type="button" id="SubDate" value="<" class="btn btn-default" /></td>
+                <td><h4 class="control-label"> @(DayOfWeek) - @Html.DisplayFor(model => model.Date) </h4></td>
+                <td><input type="button" id="AddDate" value=">" class="btn btn-default" /></td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        @if (Model != null && Model.Results != null)
+        {
+            @*@Html.Partial("_Edit", Model)*@
+        }
+        else
+        {
+            @*@Html.Partial("_Create", Model.Results)*@
+        }
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(function () {
+
+        $('#SubDate').click(function () {
+            $.post('@Url.Action("Hour", "Hours", new { DateTicks = (Model.Date.AddDays(-1)).Ticks }, null)')
+                .always(function (data) {
+                    $('#HourContainer').html(data);
+                })
+        });
+
+        $('#AddDate').click(function () {
+            $.post('@Url.Action("Hour", "Hours", new { DateTicks = (Model.Date.AddDays(1)).Ticks }, null)')
+                .always(function (data) {
+                    $('#HourContainer').html(data);
+                })
+        });
+
+        $('#EditHour').submit(function (e) {
+            e.preventDefault(); //prevent submit
+            $.ajax({
+                type: "POST",
+                url: "/Hours/Edit",
+                data: $('#EditHour').serialize(),
+                datatype: "html",
+                success: function (data) {
+                    $('#HourContainer').html('');
+                    $('#HourContainer').html(data);
+                }
+            });
+            //return false;
+        });
+
+        $('#CreateHour').submit(function (e) {
+            e.preventDefault(); //prevent submit
+            $.ajax({
+                type: "POST",
+                url: "/Hours/Create",
+                data: $('#CreateHour').serialize(),
+                datatype: "html",
+                success: function (data) {
+                    $('#HourContainer').html('');
+                    $('#HourContainer').html(data);
+                }
+            });
+            //return false;
+        });
+    });
+</script>

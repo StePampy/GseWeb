@@ -1,0 +1,199 @@
+﻿@model GseWeb.Models.Holiday.HolidayYear_User
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var ferie = Model.Holidays.Where(x => x.Type == GseWeb.Models.Holiday.Holiday_Type.Ferie).ToArray();
+    var permessi = Model.Holidays.Where(x => x.Type == GseWeb.Models.Holiday.Holiday_Type.Permesso).ToArray();
+}
+<div id="popup" style="overflow:hidden; width:auto; height:auto"></div>
+<link href="~/Content/loadingPopup-1.1.css" rel="stylesheet" />
+<div id="loading">
+    <div class="loader"></div>
+</div>
+<h3>
+    <span>
+        <button class="btn btn-default selectmonth">
+            <span class="glyphicon glyphicon-calendar">
+            </span>
+        </button>
+    </span>
+    <span>Ferie e Permessi</span>
+    <strong>@Model.Year</strong>
+</h3>
+<h4>@Model.User.LastName @Model.User.FirstName</h4>
+<hr />
+<a class="btn btn-default btn-xs" style="margin-bottom: 2px;" onclick="getPopup('@Url.Action("CreateHoliday", "Holiday" , null, null)')">
+    <span class="glyphicon glyphicon-plus-sign text-success"></span>
+    Nuova Richiesta
+</a>
+<table class="table table-bordered table-condensed gse-table-header">
+    <thead>
+        <tr>
+            <th>Mese</th>
+            @foreach (var i in Enumerable.Range(1, 31))
+            {
+                <th>@i</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var m in Model.Months)
+        {
+            <tr>
+                <td><strong>@ShareCode.MonthIT(m.Month)</strong></td>
+                @foreach (var d in m.Days)
+                {
+                    if (d.Holiday != null)
+                    {
+                        var img = (d.Holiday.Type == GseWeb.Models.Holiday.Holiday_Type.Ferie) ? "glyphicon glyphicon-send" : "glyphicon glyphicon-time";
+                        var title = (d.Holiday.Type == GseWeb.Models.Holiday.Holiday_Type.Ferie) ? string.Format("Ferie [{0}]", d.Holiday.Status) : string.Format("Permesso {0}-{1} [{2}]", d.Holiday.Time_From, d.Holiday.Time_To, d.Holiday.Status);
+                        var color = (d.Holiday.Status == GseWeb.Models.Holiday.Status_Request.Approvata) ? "text-green"
+                            : (d.Holiday.Status == GseWeb.Models.Holiday.Status_Request.Negata) ? "text-red"
+                            : "text-gray";
+                        var colday = (d.DayOfWeek == DayOfWeek.Saturday) ? "bg-info"
+                          : (d.DayOfWeek == DayOfWeek.Sunday) ? "bg-danger" : "bg-whitesmoke";
+
+
+                        <td class="@colday" title="@title">
+                            <span class="@img @color"></span>
+                        </td>
+
+                    }
+                    else
+                    {
+                        var colday = (d.DayOfWeek == DayOfWeek.Saturday) ? "bg-info"
+                          : (d.DayOfWeek == DayOfWeek.Sunday) ? "bg-danger" : "bg-whitesmoke";
+                        <td class="@colday"></td>
+
+                    }
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+@if (ferie.Length > 0)
+{
+    <h4>Richieste Ferie</h4>
+    <table class="table table-bordered table-condensed gse-table">
+        <thead>
+            <tr>
+                <th>Giorno Inizio</th>
+                <th>Giorno Fine</th>
+                <th>Giorni Richiesta</th>
+                <th>Note</th>
+                <th>Stato Richiesta</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ferie)
+            {
+                var cls = (item.Status == GseWeb.Models.Holiday.Status_Request.Approvata) ? "glyphicon glyphicon-ok-sign text-green"
+                            : (item.Status == GseWeb.Models.Holiday.Status_Request.Negata) ? "glyphicon glyphicon-remove-sign text-red"
+                            : "glyphicon glyphicon-time text-gray";
+                var title = item.Status.ToString();
+                <tr>
+                    <td>
+                        @item.Date_From.ToString("dd/MM/yyy")
+                    </td>
+                    <td>
+                        @item.Date_To.ToString("dd/MM/yyy")
+                    </td>
+                    <td>
+                        @item.Days
+                    </td>
+                    <td>
+                        @item.Request_Note
+                    </td>
+                    <td title="@title">
+                        <span class="@cls"></span>
+                    </td>
+                    <td>
+                        @Html.ActionLink("Annulla", "DeleteHoliday", "Holiday", new { id = item.Id, year = Model.Year }, new { @class = "btn btn-default btn-xs", @onclick = "return confirm('Sicuro di Voler Annullare?');" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (permessi.Length > 0)
+{
+    <h4>Richieste Permessi</h4>
+    <table class="table table-bordered table-condensed gse-table">
+        <thead>
+            <tr>
+                <th>Giorno</th>
+                <th>Ora Inizio</th>
+                <th>Ora Fine</th>
+                <th>Ore Totali</th>
+                <th>Motivazione</th>
+                <th>Stato Richiesta</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in permessi)
+            {
+                var cls = (item.Status == GseWeb.Models.Holiday.Status_Request.Approvata) ? "glyphicon glyphicon-ok-sign text-green"
+                            : (item.Status == GseWeb.Models.Holiday.Status_Request.Negata) ? "glyphicon glyphicon-remove-sign text-red"
+                            : "glyphicon glyphicon-time text-gray";
+                var title = item.Status.ToString();
+                <tr>
+                    <td>
+                        @item.Date_From.ToString("dd/MM/yyy")
+                    </td>
+                    <td>
+                        @item.Time_From
+                    </td>
+                    <td>
+                        @item.Time_To
+                    </td>
+                    <td>
+                        @item.Hours
+                    </td>
+                    <td>
+                        @item.Request_Note
+                    </td>
+                    <td title="@title">
+                        <span class="@cls"></span>
+                    </td>
+                    <td>
+                        @Html.ActionLink("Annulla", "DeleteHoliday", "Holiday", new { id = item.Id, year = Model.Year }, new { @class = "btn btn-default btn-xs", @onclick = "return confirm('Sicuro di Voler Annullare?');" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@*Pupup*@
+<script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+<script src="~/Scripts/popup-1.1.js"></script>
+
+@*Gestione DatePicker*@
+<script src="~/Scripts/bootstrap-datepicker.min.js"></script>
+<script>
+    $('.selectmonth').datepicker({
+        startView: 2,
+        minViewMode: 2,
+        maxViewMode: 2,
+        language: "it",
+        keyboardNavigation: false,
+        autoclose: true,
+    });
+
+    $('.selectmonth').datepicker().on('changeDate', function (e) {
+        var year = e.date.getFullYear();
+        var month = e.date.getMonth() + 1;
+        window.location = '/Holiday/Index?year=' + year;
+    });
+</script>
+@*Risposta di eliminazione*@
+@if (TempData["DeleteMessage"] != null)
+{
+    <script>
+        alert('@TempData["DeleteMessage"]');
+    </script>
+}

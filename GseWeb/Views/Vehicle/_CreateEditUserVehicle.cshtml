@@ -1,0 +1,61 @@
+﻿@model GseWeb.Models.Vehicles.UserVehicle
+
+
+@using (Html.BeginForm("CreateEditUserVehicle", "Vehicle", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @id = "BeginForm" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.UserId)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.VehicleDescription, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.VehicleDescription, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.VehicleDescription, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.KmHomeWork, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.KmHomeWork, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.KmHomeWork, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Cost, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Cost, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Cost, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-6">
+                <input type="submit" value="Salva" class="btn btn-default" />
+                <input type="button" value="Annulla" class="btn btn-default" onclick="closePopup();"/>
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $("#popup").dialog('option', 'title', '@ViewBag.Title');
+    $('#BeginForm').submit(function (e) {
+        e.preventDefault(); //prevent submit
+        $.ajax({
+            type: "POST",
+            url: "/Vehicle/CreateEditUserVehicle",
+            data: $('#BeginForm').serialize(),
+            datatype: "html",
+            success: function (data) {
+                $('#popup').html(data);
+            }
+        });
+        //return false;
+    });
+</script>

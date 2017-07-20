@@ -1,0 +1,85 @@
+﻿@model GseWeb.Models.Account.User
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Dettagli Utente</h2>
+
+<div>
+    <h4>
+        @Html.DisplayNameFor(model => model.UserId) :
+        @Html.DisplayFor(model => model.UserId)
+    </h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BirthDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BirthDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Phone)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Phone)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.UserRole.Value)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserRole.Value)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HoursProfile.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.HoursProfile.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Cost)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Cost)
+        </dd>
+    </dl>
+</div>
+<p>
+    <a href="@ViewBag.returnUrl">Indietro</a> |
+    @*@Html.ActionLink("Indietro", "Index", null, new { @onlick = "location.href='" + ViewBag.returnUrl + "'" }) |*@
+    @*@Html.ActionLink("Indietro", "Index") |*@
+    @Html.ActionLink("Modifica", "Edit", new { UserId = Model.UserId }) |
+    @Html.ActionLink("Elimina", "Delete", new { UserId = Model.UserId })
+</p>

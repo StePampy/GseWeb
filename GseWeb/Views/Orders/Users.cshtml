@@ -1,0 +1,46 @@
+﻿@model GseWeb.Models.Orders.UsersOrderVM
+
+@{
+    ViewBag.Title = "Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    GseWeb.Models.Orders.UserOrderVM userOrder = null;
+}
+
+<h2>Utenti Commessa</h2>
+
+@using (Html.BeginForm(new { returnUrl = ViewBag.returnUrl }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h3>
+            <strong>@Model.OrderId</strong>
+            <span> - @Model.OrderClient - @Model.OrderDescription</span>
+        </h3>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.OrderId)
+        <div class="form-group col-md-5">
+            <table class="table gse-table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(m => userOrder.UserId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => userOrder.Selected)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @Html.DisplayFor(m => m.Users)
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Salva" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}

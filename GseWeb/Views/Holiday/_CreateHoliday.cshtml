@@ -1,0 +1,109 @@
+﻿@model GseWeb.Models.Holiday.Holiday
+
+@using (Html.BeginForm("CreateHoliday", "Holiday", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @id = "BeginForm" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.UserId)
+
+        <div class="form-group" nowrap>
+            @Html.LabelFor(model => model.Type, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.RadioButtonFor(model => model.Type, 0, new { @onclick = "radioClick(this);", @checked = "checked" }) Ferie
+                <br />
+                @Html.RadioButtonFor(model => model.Type, 1, new { @onclick = "radioClick(this);" }) Permesso
+                @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group" >
+            @Html.LabelFor(model => model.Date_From, htmlAttributes: new { @id = "lbDate", @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Date_From, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Date_From, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group ferie">
+            @Html.LabelFor(model => model.Date_To, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Date_To, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Date_To, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group permesso">
+            @Html.LabelFor(model => model.Time_From, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Time_From, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Time_From, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group permesso">
+            @Html.LabelFor(model => model.Time_To, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Time_To, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Time_To, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Request_Note, htmlAttributes: new { @id = "lbNote", @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Request_Note, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Request_Note, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-6">
+                <input type="submit" value="Invia" class="btn btn-default" />
+                <input type="button" value="Annulla" class="btn btn-default" onclick="closePopup();" />
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $("#popup").dialog('option', 'title', '@ViewBag.Title');
+    $('#BeginForm').submit(function (e) {
+        $('#loading').show();
+        e.preventDefault(); //prevent submit
+        $.ajax({
+            type: "POST",
+            url: "/Holiday/CreateHoliday",
+            data: $('#BeginForm').serialize(),
+            datatype: "html",
+            success: function (data) {
+                $('#popup').html(data);
+            }
+        })
+        .always(function (data) {
+            $('#loading').hide();
+        });
+        //return false;
+    });
+
+    var radiob = { value: $('input[name=Type]:checked').val() };
+    radioClick(radiob);
+    function radioClick(radiob) {
+        if (radiob.value == 0) {
+            // Ferie
+            $("#lbDate").html("Giorno Inizio (Compreso)");
+            $("#lbNote").html("Note");
+            $(".ferie").show();
+            $(".permesso").hide();
+        } else {
+            // Permesso
+            $("#lbDate").html("Data Permesso");
+            $("#lbNote").html("Motivazione");
+            $(".ferie").hide();
+            $(".permesso").show();
+        }
+    }
+</script>
+

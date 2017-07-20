@@ -1,0 +1,74 @@
+﻿@model IEnumerable<GseWeb.Models.Hours.Festivity>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Year = (ViewBag.Year == 0) ? 0 : ViewBag.Year;
+    var sYear = ((int)ViewBag.Year == 0) ? "" : ViewBag.Year.ToString();
+}
+
+<h2>
+    <span>
+        <button class="btn btn-default selectmonth">
+            <span class="glyphicon glyphicon-calendar"></span>
+        </button>
+    </span>
+    <span>Festività</span>  
+    <strong> @sYear</strong>
+</h2>
+
+<p>
+    @Html.ActionLink("Aggiungi", "Create", new { year = ViewBag.Year })
+</p>
+@if (TempData["Error"] != null)
+{
+    <div class="text-danger">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+<table class="table gse-table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td nowrap>
+                    @Html.ActionLink("Elimina", "Delete", new { date = item.Date, year = ViewBag.Year }, new { onclick = "return confirm('Sei sicuro di voler eliminare la festività " + item.Description + " ?');" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    $('.selectmonth').datepicker({
+        startView: 2,
+        minViewMode: 2,
+        maxViewMode: 2,
+        language: "it",
+        keyboardNavigation: false,
+        autoclose: true,
+    });
+
+    $('.selectmonth').datepicker().on('changeDate', function (e) {
+        var year = e.date.getFullYear();
+        var month = e.date.getMonth() + 1;
+        window.location = '/Festivity/Index?year=' + year;
+    });
+</script>

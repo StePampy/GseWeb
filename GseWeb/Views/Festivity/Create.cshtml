@@ -1,0 +1,79 @@
+﻿@model GseWeb.Models.Hours.Festivity
+
+@{
+    ViewBag.Title = "Aggiungi Festività";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var sYear = ((int)ViewBag.Year == 0) ? "" : ViewBag.Year.ToString();
+}
+
+<h2>
+    <span>
+        <button class="btn btn-default selectmonth">
+            <span class="glyphicon glyphicon-calendar"></span>
+        </button>
+    </span>
+    <span>Aggiungi Festività</span>
+    <strong> @sYear</strong>
+</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(model => model.Date, new { @id = "dateContainer" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Date, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <span id="dateView"></span>
+                @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Aggiungi" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Indietro", "Index", new { year = ViewBag.Year})
+</div>
+
+<script>
+    $('.selectmonth').datepicker({
+        startView: 1,
+        minViewMode: 0,
+        maxViewMode: 1,
+        language: "it",
+        keyboardNavigation: false,
+        autoclose: true,
+    });
+
+    $('.selectmonth').datepicker().on('changeDate', function (e) {
+        //alert(e.date.getFullYear() + '-' + e.date.getMonth() + '-' + e.date.getDate());
+        //var year = e.date.getFullYear();
+        var year = @ViewBag.Year;
+        var month = ("0" + (e.date.getMonth() + 1)).slice(-2);
+        var day = ("0" + e.date.getDate()).slice(-2);
+
+        var setDate = year + "-" + (month) + "-" + (day);
+
+        $('#dateView').text(setDate);
+        $('#dateContainer').val(setDate);
+    });
+</script>

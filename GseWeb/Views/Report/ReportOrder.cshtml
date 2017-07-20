@@ -1,0 +1,263 @@
+﻿@using System.Globalization;
+@model GseWeb.Models.Report.ReportOrderVM
+
+@{
+    ViewBag.Title = "ReportOrder";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var CInfIT = CultureInfo.CreateSpecificCulture("it-IT");
+}
+
+<style>
+    .gse-tbody-select > tr:hover {
+        background-color: #F5F5F5;
+        cursor: pointer;
+    }
+
+    .HiddenMonth {
+        display: none;
+    }
+
+    .red {
+        background-color: red;
+    }
+
+    .green {
+        background-color: green;
+    }
+</style>
+
+<script>
+    function btToggle(src, cls) {
+        $(cls).toggle();
+        if ($(cls).css('display') == 'none') {
+            $(src).find('span').removeClass('glyphicon glyphicon-minus-sign text-danger');
+            $(src).find('span').addClass('glyphicon glyphicon-plus-sign text-success');
+
+        } else {
+            $(src).find('span').removeClass('glyphicon glyphicon-plus-sign text-success');
+            $(src).find('span').addClass('glyphicon glyphicon-minus-sign text-danger');
+        }
+    }
+</script>
+
+<div id="popup" style="overflow:hidden; width:auto; height:auto"></div>
+
+<h2>Report Commessa</h2>
+<h3>
+    <strong>@Model.Order.OrderId</strong>
+</h3>
+<table class="table table-condensed">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Order.Client)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Order.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Order.TeamLeaderInfo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Order.ExpectedCost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Order.Cost_Total)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Order.Cost_Labor)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Order.Cost_Various)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Order.Cost_Materials)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Order.FinishDate)
+        </th>
+        <th style="text-align:center;">
+            @Html.DisplayNameFor(model => model.Order.UsersInfo)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayFor(model => model.Order.Client)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.Order.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.Order.TeamLeaderInfo)
+        </td>
+        <td nowrap>
+            @Model.Order.ExpectedCost.ToString("C", CInfIT)
+        </td>
+        <td nowrap>
+            @Model.Order.Cost_Total.ToString("C", CInfIT)
+        </td>
+        <td nowrap>
+            @Model.Order.Cost_Labor.ToString("C", CInfIT)
+        </td>
+        <td nowrap>
+            @Model.Order.Cost_Various.ToString("C", CInfIT)
+        </td>
+        <td nowrap>
+            @Model.Order.Cost_Materials.ToString("C", CInfIT)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.Order.FinishDate)
+        </td>
+        <td nowrap style="font-size:9px">
+            <ul>
+                @foreach (var u in Model.Order.UsersInfo)
+                {
+                    <li>@u</li>
+                }
+            </ul>
+        </td>
+    </tr>
+</table>
+<hr />
+<h4>
+    <a onclick="btToggle(this, '.HiddenMonth')" style="cursor:pointer;">
+        <span class="glyphicon glyphicon-plus-sign text-success"></span>
+    </a>
+    Manodopera
+</h4>
+<table class="table table-condensed gse-table">
+    <thead>
+        <tr>
+            <th>
+                Totale
+            </th>
+            <th>
+                Ore da Approvare
+            </th>
+            <th>
+                Ore Approvate
+            </th>
+            <th>
+                Costo Ore
+            </th>
+            <th>
+                Rimborsi Chilometrici
+            </th>
+            <th>
+                Rimborsi Spese
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Users)
+        {
+            <tr>
+                <td>
+                    @item.UserInfo
+                </td>
+                <td>
+                    @ShareCode.HHmmString(item.HoursNotApproved)
+                </td>
+                <td>
+                    @ShareCode.HHmmString(item.HoursApproved)
+                </td>
+                <td>
+                    @item.Cost_Hours.ToString("C", CInfIT)
+                </td>
+                <td>
+                    @item.Cost_Vehicles.ToString("C", CInfIT)
+                </td>
+                <td>
+                    @item.Cost_Expenses.ToString("C", CInfIT)
+                </td>
+            </tr>
+        }
+    </tbody>
+    @foreach (var month in Model.Month)
+    {
+        var MonthName = CInfIT.TextInfo.ToTitleCase(CInfIT.DateTimeFormat.GetMonthName(month.Month));
+        <tr class="HiddenMonth">
+            <td colspan="3"></td>
+        </tr>
+        <thead class="HiddenMonth">
+            <tr>
+                <th>
+                    @MonthName @month.Year
+                </th>
+                <th>
+                    @ShareCode.HHmmString(month.HoursNotApproved)
+                </th>
+                <th>
+                    @ShareCode.HHmmString(month.HoursApproved)
+                </th>
+                <th>
+                    @month.Cost_Hours.ToString("C", CInfIT)
+                </th>
+                <th>
+                    @month.Cost_Vehicles.ToString("C", CInfIT)
+                </th>
+                <th>
+                    @month.Cost_Expenses.ToString("C", CInfIT)
+                </th>
+            </tr>
+        </thead>
+        <tbody class="gse-tbody-select HiddenMonth">
+            @foreach (var user in month.Users)
+            {
+                <tr onclick="getPopup('@Url.Action("ReportLabor", "Report" , new { year = month.Year, month = month.Month, UserId = user.UserId, OrderId = Model.Order.OrderId }, null)')">
+                    <td>
+                        @user.UserInfo
+                    </td>
+                    <td>
+                        @ShareCode.HHmmString(user.HoursNotApproved)
+                    </td>
+                    <td>
+                        @ShareCode.HHmmString(user.HoursApproved)
+                    </td>
+                    <td>
+                        @user.Cost_Hours.ToString("C", CInfIT)
+                    </td>
+                    <td>
+                        @user.Cost_Vehicles.ToString("C", CInfIT)
+                    </td>
+                    <td>
+                        @user.Cost_Expenses.ToString("C", CInfIT)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    }
+</table>
+@Html.ActionLink("Indietro", "ReportOrders")
+
+@*Pupup*@
+<script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+<script>
+    $(function () {
+        $("#popup").dialog({
+            autoOpen: false,
+            title: 'Title',
+            width: 'auto',
+            height: 'auto',
+            modal: true,
+            draggable: false,
+            resizable: false,
+        });
+    });
+
+    function getPopup(Url) {
+        $.get(Url)
+        .success(function (data) {
+            $('#popup').html(data);
+            $('#popup').dialog('open');
+            // Posizione popup
+            if ($('#popup').closest('.ui-dialog').offset().top < 80) {
+                $('#popup').closest('.ui-dialog').css({ 'top': '80px' });
+            }
+        });
+    }
+
+    function closePopup() {
+        $('#popup').dialog('close')
+    }
+</script>
+

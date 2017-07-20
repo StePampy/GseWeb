@@ -1,0 +1,100 @@
+﻿@using System.Globalization;
+
+@helper HHmmString(TimeSpan time)
+{
+    <span>@string.Format("{0}:{1:mm}", (int)time.TotalHours, time)</span>
+}
+
+@helper LongDayWeekIT(DateTime date)
+{
+    <span>@date.ToString("dddd", new CultureInfo("it-IT"))</span>
+}
+
+@helper ddMMString(DateTime date)
+{
+    <span>@date.ToString("dd/MM")</span>
+}
+
+@helper ddString(DateTime date)
+{
+    <span>@date.ToString("dd")</span>
+}
+
+@helper boolImg(bool value)
+{
+    var cls = (value) ? "glyphicon glyphicon-check" : "glyphicon glyphicon-unchecked";
+    <span class="@cls"></span>
+}
+
+@helper boolOKNOK(bool value)
+{
+    var cls = (value) ? "glyphicon glyphicon-ok-sign text-success" : "glyphicon glyphicon-remove-sign text-danger";
+    <span class="@cls"></span>
+}
+
+@functions
+{
+    public static string MonthIT(int month)
+    {
+        var CInfIT = CultureInfo.CreateSpecificCulture("it-IT");
+        return CInfIT.TextInfo.ToTitleCase(CInfIT.DateTimeFormat.GetMonthName(month));
+    }
+
+    public static string DayWeekIT(DateTime date)
+    {
+        var CInfIT = CultureInfo.CreateSpecificCulture("it-IT");
+        return CInfIT.TextInfo.ToTitleCase(date.ToString("ddd", CInfIT));
+    }
+
+    public static string boolIT(bool value)
+    {
+        return (value) ? "SI" : "NO";
+    }
+
+    public static string WorkTypeColor(int WorkType)
+    {
+        switch (WorkType)
+        {
+            case 2: // Straordinario
+                return "#BFBFBF";
+            case 3: // Non giustificato
+                return "#FFFF80";
+            case 4: // Ferie
+            case 5: // Permesso
+            case 6: // Permesso non retribuito
+            case 10: // recupero
+                return "#92D050";
+            case 7: // Malattia
+            case 8: // Infortunio
+            case 9: // Lutto
+            case 12: // No commesse
+            case 13: // No approvazione
+                return "#F4B084";
+            case 11: // Viaggio
+            case 997: //presenze
+            case 998: //Trasferta
+            case 999: // Totale Viaggio
+            case 1000: // Totale
+                return "#FFD966";
+            default:
+                return "";
+        }
+    }
+
+    public static string DayWeekColor(int DayOfWeek, bool Festivity, string actual)
+    {
+        // Sabato e Domenica
+        switch (DayOfWeek)
+        {
+            case 0: //domenica
+                actual = "#5B9BD5";
+                break;
+            case 6: //sabato
+                actual = "8EA9DB";
+                break;
+        }
+        // Festività
+        actual = (Festivity) ? "#5B9BD5" : actual;
+        return actual;
+    }
+}

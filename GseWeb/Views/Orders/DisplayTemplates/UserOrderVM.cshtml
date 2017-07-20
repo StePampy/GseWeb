@@ -1,0 +1,16 @@
+﻿@model GseWeb.Models.Orders.UserOrderVM
+
+@Html.HiddenFor(m => m.UserId)
+@Html.HiddenFor(m => m.UserInfo)
+<tr>
+    <td>
+        @Html.DisplayFor(model => model.UserInfo)
+    </td>
+   
+    <td>
+        <div class="checkbox">
+            @Html.EditorFor(model => model.Selected)
+            @Html.ValidationMessageFor(model => model.Selected, "", new { @class = "text-danger" })
+        </div>
+    </td>
+</tr>
