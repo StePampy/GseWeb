@@ -1,0 +1,98 @@
+﻿@model GseWeb.Models.Hours.HoursOfDay
+
+<h4>@ViewBag.Title</h4>
+<div id="HoursContainer">
+    @Html.Partial("_ManageHours", new GseWeb.Models.Hours.Hour
+{
+    UserId = Model.UserId,
+    Date = Model.Date,
+    Start = Model.Start,
+    End = Model.End,
+    Break = Model.Break,
+    Travel = Model.Travel,
+    OffSite = Model.OffSite,
+    WorkType = Model.WorkTypeRegular,
+    Note = Model.Note,
+    WorkTime = Model.WorkTime,
+})
+</div>
+
+@{
+    var avaiableHours = Model.WorkTime + Model.Travel - Model.OrdersTimeComplete;
+}
+<h4>Commesse:</h4>
+<p><strong>Ore Disponibili: </strong><span>@ShareCode.HHmmString(avaiableHours)</span></p>
+<div id="OrdersContainer">
+    @if (avaiableHours > new TimeSpan(0))
+    {
+        @*@Html.Partial("_ManageWorkOrders", new GseWeb.Models.Orders.WorkOrder())*@
+    }
+</div>
+
+<table class="table table-condensed gse-table" style="font-size: 12px;">
+    @foreach (var item in Model.WorkOrders)
+    {
+        <tr>
+            <td>
+                @{
+                    var clbtEdit = (item.Approved) ? "btn-success" : "btn-danger";
+                    var txbtEdit = (item.Approved) ? "Ore Approvate" : "Ore Non Approvate";
+                }
+                <input type="button" class="btn btn-default btn-xs @clbtEdit" value="Modifica" title="@txbtEdit" onclick="EditOrder('@item.DateTicks', '@item.OrderId')" />
+            </td>
+            <td>
+                @item.OrderId
+            </td>
+            <td>
+                @item.Order.Client
+            </td>
+            <td>
+                @item.Order.Description
+            </td>
+            <td>
+                @ShareCode.HHmmString(item.Hours)
+            </td>
+            <td>
+            <td>
+                @if (item.Note != null)
+                        {
+                    <button class="btn btn-default btn-xs" onclick="alert('@item.Note');" style="background-color: #FEFE30" title="Note">
+                        <span class="glyphicon glyphicon-tag"></span>
+                    </button>
+                }
+                <input type="button" class="btn btn-default btn-xs" value="Elimina" onclick="DeleteOrder('@item.DateTicks', '@item.OrderId')" />
+            </td>
+
+        </tr>
+    }
+</table>
+<script type="text/javascript">
+    $("#popup").dialog('option', 'title', '@ViewBag.PopupTitle');
+    function EditOrder(DateTicks, OrderId) {
+        $.ajax({
+            type: "POST",
+            url: "/UserOrders/GetWorkOrder",
+            data: { DateTicks: DateTicks, OrderId: OrderId },  //$('#EditOrder').serialize(),
+            datatype: "html",
+            success: function (data) {
+                $('#OrdersContainer').html(data);
+            }
+        });
+        //alert("Edit" + DateTicks + OrderId);
+    }
+
+    function DeleteOrder(DateTicks, OrderId) {
+        if (confirm('Sei sicuro di voler eliminare la commessa ' + OrderId + '?')) {
+            $.ajax({
+                type: "POST",
+                url: "/UserOrders/DeleteWorkOrder",
+                data: { DateTicks: DateTicks, OrderId: OrderId },  //$('#EditOrder').serialize(),
+                datatype: "html",
+                success: function (data) {
+                    $('#popup').html(data);
+                }
+            });
+        }
+        //alert("Delete" + DateTicks + OrderId);
+    }
+</script>

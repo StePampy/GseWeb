@@ -28,8 +28,8 @@ namespace GseWeb.DAL
         public virtual DbSet<Role> UserRoles { get; set; }
         public virtual DbSet<Profile> HoursProfiles { get; set; }
         public virtual DbSet<Hour> Hours { get; set; }
-        public virtual DbSet<HourResult> HourResults { get; set; }
-        public virtual DbSet<WorkType> WorkTypes { get; set; }
+        //public virtual DbSet<HourResult> HourResults { get; set; }
+        //public virtual DbSet<WorkType> WorkTypes { get; set; }
         public virtual DbSet<Festivity> Festivities { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<UserOrder> UsersOrders { get; set; }
@@ -72,10 +72,10 @@ namespace GseWeb.DAL
                 throw new Exception("Il mese è congelato, contattare amministrazione");
         }
 
-        public virtual Models.UserWork.HoursOfDay[] UserWork(int Year, string UserId)
+        public virtual Models.Hours.HoursOfDay[] UserWork(int Year, string UserId)
         {
             var data = ((IObjectContextAdapter)this)
-                .ObjectContext.ExecuteStoreQuery<Models.UserWork.HoursOfDay>("CALL sp_UserWork_Year({0}, {1});", Year, UserId).ToArray();
+                .ObjectContext.ExecuteStoreQuery<Models.Hours.HoursOfDay>("CALL sp_UserWork_Year({0}, {1});", Year, UserId).ToArray();
             foreach (var item in data)
             {
                 item.WorkOrders = WorkOrders.Where(x => x.UserId == item.UserId && x.Date == item.Date).ToArray();

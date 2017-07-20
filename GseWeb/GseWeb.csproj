@@ -144,11 +144,11 @@
     <Compile Include="Controllers\FestivityController.cs" />
     <Compile Include="Controllers\HolidayController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\HoursController.cs" />
+    <Compile Include="Controllers\HoursOldController.cs" />
     <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\UserOrdersController.cs" />
-    <Compile Include="Controllers\UserWorkController.cs" />
+    <Compile Include="Controllers\HoursController.cs" />
     <Compile Include="Controllers\VehicleController.cs" />
     <Compile Include="DAL\Extensions.cs" />
     <Compile Include="DAL\GestionaleDB.cs" />
@@ -166,15 +166,11 @@
     <Compile Include="Models\Holiday\HolidayUser.cs" />
     <Compile Include="Models\MonthFrozen.cs" />
     <Compile Include="Models\Orders\EditOrderId.cs" />
-    <Compile Include="Models\Report\Day.cs" />
     <Compile Include="Models\Hours\Festivity.cs" />
-    <Compile Include="Models\UserWork\HoursOfMonth.cs" />
-    <Compile Include="Models\UserWork\HoursOfWeek.cs" />
-    <Compile Include="Models\UserWork\HoursOfDay.cs" />
+    <Compile Include="Models\Hours\HoursOfMonth.cs" />
+    <Compile Include="Models\Hours\HoursOfWeek.cs" />
+    <Compile Include="Models\Hours\HoursOfDay.cs" />
     <Compile Include="Models\Hours\Hour.cs" />
-    <Compile Include="Models\Hours\IHour.cs" />
-    <Compile Include="Models\Report\MonthTotal.cs" />
-    <Compile Include="Models\Hours\WorkType.cs" />
     <Compile Include="Models\Account\Profile.cs" />
     <Compile Include="Models\Orders\ApproveHour.cs" />
     <Compile Include="Models\Orders\OrderVM.cs" />
@@ -185,13 +181,12 @@
     <Compile Include="Models\Orders\WorkOrder.cs" />
     <Compile Include="Models\Orders\UserOrder.cs" />
     <Compile Include="Models\Orders\Order.cs" />
-    <Compile Include="Models\Report\MonthReport.cs" />
     <Compile Include="Models\Report\ReportUser.cs" />
     <Compile Include="Models\Report\ReportWorkOrder.cs" />
     <Compile Include="Models\Report\ReportLabor_Month.cs" />
-    <Compile Include="Models\UserWork\HoursOfYear.cs" />
-    <Compile Include="Models\UserWork\WorkType.cs" />
-    <Compile Include="Models\UserWork\HoursReport.cs" />
+    <Compile Include="Models\Hours\HoursOfYear.cs" />
+    <Compile Include="Models\Hours\WorkType.cs" />
+    <Compile Include="Models\Hours\HoursReport.cs" />
     <Compile Include="Models\Vehicles\Route.cs" />
     <Compile Include="Models\Vehicles\UserVehicle.cs" />
     <Compile Include="Models\Vehicles\VehicleVM.cs" />
@@ -411,11 +406,11 @@
     <Content Include="Views\UserOrders\_Orders.cshtml" />
     <Content Include="Views\UserOrders\_Edit.cshtml" />
     <Content Include="Views\UserOrders\_Add.cshtml" />
-    <Content Include="Views\Hours\_Create.cshtml" />
-    <Content Include="Views\Hours\_Edit.cshtml" />
-    <Content Include="Views\Hours\Hour.cshtml" />
-    <Content Include="Views\Hours\Index.cshtml" />
-    <Content Include="Views\Hours\_Hour.cshtml" />
+    <Content Include="Views\HoursOld\_Create.cshtml" />
+    <Content Include="Views\HoursOld\_Edit.cshtml" />
+    <Content Include="Views\HoursOld\Hour.cshtml" />
+    <Content Include="Views\HoursOld\Index.cshtml" />
+    <Content Include="Views\HoursOld\_Hour.cshtml" />
     <Content Include="Views\Orders\Index.cshtml" />
     <Content Include="Views\Orders\Create.cshtml" />
     <Content Include="Views\Orders\Edit.cshtml" />
@@ -444,8 +439,10 @@
     <Content Include="Views\Holiday\_ApproveHoliday.cshtml" />
     <Content Include="Views\Orders\_EditOrderId.cshtml" />
     <Content Include="Views\Report\_ReportLabor.cshtml" />
-    <Content Include="Views\UserWork\ReportMonth.cshtml" />
-    <Content Include="Views\UserWork\_ManageDay.cshtml" />
+    <Content Include="Views\Hours\_ManageDay.cshtml" />
+    <Content Include="Views\Hours\Index.cshtml" />
+    <Content Include="Views\Hours\_ManageHours.cshtml" />
+    <Content Include="Views\UserOrders\_ManageWorkOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -456,9 +453,7 @@
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\NewHours\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

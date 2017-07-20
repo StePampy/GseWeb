@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-namespace GseWeb.Models.UserWork
+namespace GseWeb.Models.Hours
 {
     public class HoursOfDay
     {

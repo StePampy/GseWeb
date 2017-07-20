@@ -1,20 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel;
 using System.Linq;
 using System.Web;
 
 namespace GseWeb.Models.Hours
 {
-    [Table("work_type")]
-    public class WorkType
+    public enum WorkType
     {
-        [Key]
-        public int Id { get; set; }
-
-        [Display(Name = "Causale")]
-        public string Description { get; set; }
-        public virtual ICollection<Hour> Days { get; set; }
+        Default,
+        Lavoro,
+        Straordinario,
+        [Description("Non Giustificato")]
+        NonGiustificato,
+        Ferie,
+        [Description("Permesso Retribuito")]
+        PermessoRetribuito,
+        [Description("Permesso Non Retribuito")]
+        PermessoNonRetribuito,
+        Malattia,
+        Infortunio,
+        Lutto,
+        Recupero,
+        Viaggio,
+        [Description("Ore Senza Commesse")]
+        NoCommesse,
+        [Description("Non Approvate")]
+        NoApproved,
     }
 }

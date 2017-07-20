@@ -38,10 +38,10 @@ namespace GseWeb.Models.Orders
             var hrcfg = new TimeSpan(ord.Orders.Sum(x => x.Hours.Ticks));
 
             // Giornata segnata
-            var day = db.HourResults.Find(UserId, Date);
+            var day = new TimeSpan(0);//db.HourResults.Find(UserId, Date);
 
             // Sommo ore totali giornata con ore viaggio
-            var hrday = day.WorkTime.Add(day.Travel);
+            var hrday = new TimeSpan(0);//day.WorkTime.Add(day.Travel);
 
             // Ore disponibili
             ord.AvaiableHours = hrday.Subtract(hrcfg);

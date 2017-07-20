@@ -1,0 +1,108 @@
+﻿@model GseWeb.Models.Hours.Hour
+
+@using (Html.BeginForm("CreateEditHours", "Hours", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @id = "BeginFormHours" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        @if (ViewBag.Success != null)
+        {
+            <p class="text-success">@ViewBag.Success</p>
+        }
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(model => model.UserId)
+        @Html.HiddenFor(model => model.DateTicks)
+       
+        <div class="form-group">
+            @Html.LabelFor(model => model.Start, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Start, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Start, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.End, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.End, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.End, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Break, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Break, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Break, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Travel, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Travel, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Travel, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Note, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Note, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Note, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.OffSite, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7 form-control-static">
+                @Html.CheckBoxFor(model => model.OffSite)
+                @Html.ValidationMessageFor(model => model.OffSite, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.WorkTime, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                <p class="form-control-static">@ShareCode.HHmmString(Model.WorkTime)</p>
+            </div>
+        </div>
+
+        @if (Model.WorkType == GseWeb.Models.Hours.WorkType.NonGiustificato)
+        {
+            var lstWorkType = (IEnumerable<SelectListItem>)ViewBag.lstWorkType;
+            <div class="form-group">
+                @Html.LabelFor(model => model.WorkType, htmlAttributes: new { @class = "control-label col-md-5" })
+                <div class="col-md-7">
+                    @Html.DropDownListFor(model => model.WorkType, lstWorkType, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.WorkType, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        }
+        
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-6">
+                <input type="submit" value="Salva" class="btn btn-default" />
+                <input type="button" value="Chiudi" class="btn btn-default" onclick="closePopup();" />
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $('#BeginFormHours').submit(function (e) {
+        e.preventDefault(); //prevent submit
+        $.ajax({
+            type: "POST",
+            url: "/Hours/CreateEditHours",
+            data: $('#BeginFormHours').serialize(),
+            datatype: "html",
+            success: function (data) {
+                $('#popup').html(data);
+            },
+            error: function (data) {
+                $('#HoursContainer').html(data);
+            }
+        });
+        //return false;
+    });
+</script>

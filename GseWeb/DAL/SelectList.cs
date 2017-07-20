@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using GseWeb.Models;
 
 namespace GseWeb.DAL
 {
@@ -51,19 +52,38 @@ namespace GseWeb.DAL
                 });
             }
         }
-        public static IEnumerable<SelectListItem> WorkTypes()
+
+        public static IEnumerable<SelectListItem> WorkTypesNotJustified()
         {
-            using (var db = new GestionaleDB())
+            var lst = new Models.Hours.WorkType[]
             {
-                return db.WorkTypes.Where(x => x.Id > 2)
-                    .OrderBy(x => x.Id).ToArray()
-                .Select(x => new SelectListItem
-                {
-                    Value = x.Id.ToString(),
-                    Text = x.Description
-                });
-            }
+                Models.Hours.WorkType.PermessoNonRetribuito,
+                Models.Hours.WorkType.Malattia,
+                Models.Hours.WorkType.Infortunio,
+                Models.Hours.WorkType.Lutto,
+                Models.Hours.WorkType.Recupero,
+                Models.Hours.WorkType.Viaggio,
+            };
+            return lst.Select(x => new SelectListItem
+            {
+                Value = ((int)x).ToString(),
+                Text = x.Description()
+            });
         }
+
+        //public static IEnumerable<SelectListItem> WorkTypes()
+        //{
+        //    using (var db = new GestionaleDB())
+        //    {
+        //        return db.WorkTypes.Where(x => x.Id > 2)
+        //            .OrderBy(x => x.Id).ToArray()
+        //        .Select(x => new SelectListItem
+        //        {
+        //            Value = x.Id.ToString(),
+        //            Text = x.Description
+        //        });
+        //    }
+        //}
 
         public static IEnumerable<SelectListItem> UserOrders(string UserId)
         {

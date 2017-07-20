@@ -10,6 +10,9 @@ namespace GseWeb.Models.Orders
     [Table("work_orders")]
     public class WorkOrder
     {
+        [NotMapped]
+        public long DateTicks { get { return Date.Ticks; } set { Date = new DateTime(value); } }
+
         [Key, Column(Order = 0)]
         [Display(Name = "Utente")]
         public string UserId { get; set; }

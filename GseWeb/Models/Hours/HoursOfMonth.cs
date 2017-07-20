@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace GseWeb.Models.UserWork
+namespace GseWeb.Models.Hours
 {
     public class HoursOfMonth
     {

@@ -1,0 +1,75 @@
+﻿@using System.Globalization;
+@{
+    ViewBag.Title = "Gestione Ore";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var CInfIT = CultureInfo.CreateSpecificCulture("it-IT");
+}
+
+@{
+    var month1 = DateTime.Now;
+    var month2 = DateTime.Now.AddMonths(-1);
+    var month3 = DateTime.Now.AddMonths(-2);
+
+    var smonth1 = string.Format("{0} {1}", CInfIT.TextInfo.ToTitleCase(CInfIT.DateTimeFormat.GetMonthName(month1.Month)), month1.Year);
+    var smonth2 = string.Format("{0} {1}", CInfIT.TextInfo.ToTitleCase(CInfIT.DateTimeFormat.GetMonthName(month2.Month)), month2.Year);
+    var smonth3 = string.Format("{0} {1}", CInfIT.TextInfo.ToTitleCase(CInfIT.DateTimeFormat.GetMonthName(month3.Month)), month3.Year);
+    var smallmonth1 = string.Format("{0} / {1}", month1.Month, month1.Year);
+    var smallmonth2 = string.Format("{0} / {1}", month2.Month, month2.Year);
+    var smallmonth3 = string.Format("{0} / {1}", month3.Month, month3.Year);
+}
+
+<br />
+<div class="form-inline visible-lg visible-md">
+    <div class="form-group">
+        @Html.ActionLink(smonth3, "ReportMonth", "Report", new { year = month3.Year, month = month3.Month }, new { @class = "btn btn-default" })
+    </div>
+    <div class="form-group">
+        @Html.ActionLink(smonth2, "ReportMonth", "Report", new { year = month2.Year, month = month2.Month }, new { @class = "btn btn-default" })
+    </div>
+    <div class="form-group">
+        @Html.ActionLink(smonth1, "ReportMonth", "Report", new { year = month1.Year, month = month1.Month }, new { @class = "btn btn-default" })
+    </div>
+
+    <button class="btn btn-default selectmonth">
+        <span class="glyphicon glyphicon-calendar"></span>
+    </button>
+</div>
+<div class="form-inline visible-sm visible-xs">
+
+    @Html.ActionLink(smallmonth3, "ReportMonth", "Report", new { year = month3.Year, month = month3.Month }, new { @class = "btn btn-default" })
+
+
+    @Html.ActionLink(smallmonth2, "ReportMonth", "Report", new { year = month2.Year, month = month2.Month }, new { @class = "btn btn-default" })
+
+
+    @Html.ActionLink(smallmonth1, "ReportMonth", "Report", new { year = month1.Year, month = month1.Month }, new { @class = "btn btn-default" })
+
+    <button class="btn btn-default selectmonth">
+        <span class="glyphicon glyphicon-calendar"></span>
+    </button>
+</div>
+  
+<div class="form-group">
+    @{
+        Html.RenderAction("Hour", "Hours");
+    }
+</div>
+
+@*Gestione DatePicker*@
+<script src="~/Scripts/bootstrap-datepicker.min.js"></script>
+<script>
+    $('.selectmonth').datepicker({
+        startView: 1,
+        minViewMode: 1,
+        language: "it",
+        keyboardNavigation: false,
+        autoclose: true,
+    });
+
+    $('.selectmonth').datepicker().on('changeDate', function (e) {
+        var year = e.date.getFullYear();
+        var month = e.date.getMonth() + 1;
+        window.location = '/Report/ReportMonth?year=' + year + '&month=' + month;
+    });
+</script>
+
