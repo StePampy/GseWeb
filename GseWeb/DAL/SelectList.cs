@@ -53,37 +53,26 @@ namespace GseWeb.DAL
             }
         }
 
-        public static IEnumerable<SelectListItem> WorkTypesNotJustified()
+        public static IEnumerable<SelectListItem> WorkTypesNotJustified(bool IsTravel = false, bool HaveAmount = false)
         {
-            var lst = new Models.Hours.WorkType[]
+            var lst = new List<Models.Hours.WorkType>
             {
+                Models.Hours.WorkType.NonGiustificato,
                 Models.Hours.WorkType.PermessoNonRetribuito,
                 Models.Hours.WorkType.Malattia,
                 Models.Hours.WorkType.Infortunio,
                 Models.Hours.WorkType.Lutto,
-                Models.Hours.WorkType.Recupero,
-                Models.Hours.WorkType.Viaggio,
             };
+            if (IsTravel)
+                lst.Add(Models.Hours.WorkType.Viaggio);
+            if (HaveAmount)
+                lst.Add(Models.Hours.WorkType.Recupero);
             return lst.Select(x => new SelectListItem
             {
                 Value = ((int)x).ToString(),
                 Text = x.Description()
             });
         }
-
-        //public static IEnumerable<SelectListItem> WorkTypes()
-        //{
-        //    using (var db = new GestionaleDB())
-        //    {
-        //        return db.WorkTypes.Where(x => x.Id > 2)
-        //            .OrderBy(x => x.Id).ToArray()
-        //        .Select(x => new SelectListItem
-        //        {
-        //            Value = x.Id.ToString(),
-        //            Text = x.Description
-        //        });
-        //    }
-        //}
 
         public static IEnumerable<SelectListItem> UserOrders(string UserId)
         {

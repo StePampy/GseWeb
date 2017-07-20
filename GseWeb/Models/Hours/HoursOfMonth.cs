@@ -13,11 +13,11 @@ namespace GseWeb.Models.Hours
         public Account.User User { get { return HoursOfYear.User; } }
         public IEnumerable<HoursOfDay> Hours { get { return HoursOfYear.Hours.Where(x => x.Date.Month == Month); } }
 
-        public TimeSpan Amount
+        public TimeSpan ExtraAmount
         {
             get
             {
-                return TimeSpan.FromSeconds(Hours.Sum(x => x.AmountFestivity.TotalSeconds) + Hours.Sum(x => x.AmountWorking.TotalSeconds));
+                return TimeSpan.FromSeconds(Hours.Sum(x => x.ExtraAmount.TotalSeconds));
             }
         }
 

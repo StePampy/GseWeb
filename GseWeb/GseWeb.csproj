@@ -144,10 +144,8 @@
     <Compile Include="Controllers\FestivityController.cs" />
     <Compile Include="Controllers\HolidayController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\HoursOldController.cs" />
     <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
-    <Compile Include="Controllers\UserOrdersController.cs" />
     <Compile Include="Controllers\HoursController.cs" />
     <Compile Include="Controllers\VehicleController.cs" />
     <Compile Include="DAL\Extensions.cs" />
@@ -173,7 +171,6 @@
     <Compile Include="Models\Hours\Hour.cs" />
     <Compile Include="Models\Account\Profile.cs" />
     <Compile Include="Models\Orders\ApproveHour.cs" />
-    <Compile Include="Models\Orders\OrderVM.cs" />
     <Compile Include="Models\Report\ReportOrderDetails.cs" />
     <Compile Include="Models\Report\ReportOrderVM.cs" />
     <Compile Include="Models\Orders\UserOrderVM.cs" />
@@ -403,23 +400,14 @@
     <Content Include="Views\Account\Details.cshtml" />
     <Content Include="Views\Account\Create.cshtml" />
     <Content Include="Views\Account\Manage.cshtml" />
-    <Content Include="Views\UserOrders\_Orders.cshtml" />
-    <Content Include="Views\UserOrders\_Edit.cshtml" />
-    <Content Include="Views\UserOrders\_Add.cshtml" />
-    <Content Include="Views\HoursOld\_Create.cshtml" />
-    <Content Include="Views\HoursOld\_Edit.cshtml" />
-    <Content Include="Views\HoursOld\Hour.cshtml" />
-    <Content Include="Views\HoursOld\Index.cshtml" />
-    <Content Include="Views\HoursOld\_Hour.cshtml" />
     <Content Include="Views\Orders\Index.cshtml" />
     <Content Include="Views\Orders\Create.cshtml" />
     <Content Include="Views\Orders\Edit.cshtml" />
     <Content Include="Views\Orders\Users.cshtml" />
     <Content Include="Views\Orders\DisplayTemplates\UserOrderVM.cshtml" />
-    <Content Include="Views\UserOrders\ApproveHours.cshtml" />
+    <Content Include="Views\Orders\ApproveHours.cshtml" />
     <Content Include="Views\Festivity\Index.cshtml" />
     <Content Include="Views\Festivity\Create.cshtml" />
-    <Content Include="Views\Report\ReportMonth.cshtml" />
     <Content Include="Views\Report\ReportOrders.cshtml" />
     <Content Include="Views\Report\ReportUsers.cshtml" />
     <Content Include="Views\Report\ReportOrder.cshtml" />
@@ -442,7 +430,7 @@
     <Content Include="Views\Hours\_ManageDay.cshtml" />
     <Content Include="Views\Hours\Index.cshtml" />
     <Content Include="Views\Hours\_ManageHours.cshtml" />
-    <Content Include="Views\UserOrders\_ManageWorkOrder.cshtml" />
+    <Content Include="Views\Hours\_ManageWorkOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

@@ -53,10 +53,9 @@
                 </td>
                 <td nowrap>
                     @Html.ActionLink("Dettagli Utente", "Details", "Account", new { UserId = item.UserId, returnUrl = "/Report/ReportUsers?year=" + ViewBag.Year + "&month=" + ViewBag.Month }, new { @class = "btn btn-default" })
-                    @Html.ActionLink("Visualizza Ore", "ReportMonth", "Report", new { year = ViewBag.Year, month = ViewBag.Month, UserId = item.UserId }, new { @class = "btn btn-default" })
+                    @Html.ActionLink("Visualizza Ore", "Index", "Hours", new { year = ViewBag.Year, month = ViewBag.Month, UserId = item.UserId }, new { @class = "btn btn-default" })
                     @Html.ActionLink("Rimborsi Chilometrici", "Index", "Vehicle", new { year = ViewBag.Year, month = ViewBag.Month, UserId = item.UserId }, new { @class = "btn btn-default" })
                     @Html.ActionLink("Ore Commesse", "ReportWorkOrders", "Report", new { year = ViewBag.Year, month = ViewBag.Month, UserId = item.UserId }, new { @class = "btn btn-default" })
-                    @*@Html.ActionLink("Visualizza Ore", "ReportMonth", "Report", new { year = ViewBag.Year, month = ViewBag.Month, UserId = item.UserId }, new { @class = "btn btn-default" })*@
                 </td>
             </tr>
         }

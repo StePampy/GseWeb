@@ -81,7 +81,6 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ore</a>
                             <ul class="dropdown-menu">
                                 <li>@Html.ActionLink("Gestione Ore", "Index", "Hours")</li>
-                                @*<li>@Html.ActionLink("Ore Mese", "ReportMonth", "Report")</li>*@
                                 <li>@Html.ActionLink("Ore Commesse", "ReportWorkOrders", "Report")</li>
                                 <li>@Html.ActionLink("Ferie e Permessi", "Index", "Holiday")</li>
                             </ul>
@@ -112,7 +111,7 @@
                                     <li>@Html.ActionLink("Stato Commesse", "ReportOrders", "Report")</li>
                                     <li>@Html.ActionLink("Gestione Commesse", "Index", "Orders")</li>
                                     <li>@Html.ActionLink("Aggiungi Commessa", "Create", "Orders")</li>
-                                    <li>@Html.ActionLink("Approva Ore", "ApproveHours", "UserOrders")</li>
+                                    <li>@Html.ActionLink("Approva Ore", "ApproveHours", "Orders")</li>
                                     <li>@Html.ActionLink("Approva Rimborsi Chilometrici", "Approve", "Vehicle")</li>
                                 </ul>
                             </li>
@@ -123,7 +122,7 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Commesse</a>
                                 <ul class="dropdown-menu">
                                     <li>@Html.ActionLink("Stato Commesse", "ReportOrders", "Report")</li>
-                                    <li>@Html.ActionLink("Approva Ore", "ApproveHours", "UserOrders")</li>
+                                    <li>@Html.ActionLink("Approva Ore", "ApproveHours", "Orders")</li>
                                     <li>@Html.ActionLink("Approva Rimborsi Chilometrici", "Approve", "Vehicle")</li>
                                 </ul>
                             </li>

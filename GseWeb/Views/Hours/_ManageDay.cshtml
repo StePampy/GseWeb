@@ -25,10 +25,15 @@
 <div id="OrdersContainer">
     @if (avaiableHours > new TimeSpan(0))
     {
-        @*@Html.Partial("_ManageWorkOrders", new GseWeb.Models.Orders.WorkOrder())*@
+        @Html.Partial("_ManageWorkOrder", new GseWeb.Models.Orders.WorkOrder
+        {
+            UserId = Model.UserId,
+            Date = Model.Date,
+            Hours = avaiableHours
+        });
     }
 </div>
-
+<br />
 <table class="table table-condensed gse-table" style="font-size: 12px;">
     @foreach (var item in Model.WorkOrders)
     {
@@ -53,9 +58,9 @@
                 @ShareCode.HHmmString(item.Hours)
             </td>
             <td>
-            <td>
+            <td wowrap>
                 @if (item.Note != null)
-                        {
+                {
                     <button class="btn btn-default btn-xs" onclick="alert('@item.Note');" style="background-color: #FEFE30" title="Note">
                         <span class="glyphicon glyphicon-tag"></span>
                     </button>
@@ -64,15 +69,15 @@
             </td>
 
         </tr>
-    }
+                    }
 </table>
 <script type="text/javascript">
     $("#popup").dialog('option', 'title', '@ViewBag.PopupTitle');
     function EditOrder(DateTicks, OrderId) {
         $.ajax({
             type: "POST",
-            url: "/UserOrders/GetWorkOrder",
-            data: { DateTicks: DateTicks, OrderId: OrderId },  //$('#EditOrder').serialize(),
+            url: "/Hours/GetWorkOrder",
+            data: { DateTicks: DateTicks, OrderId: OrderId },
             datatype: "html",
             success: function (data) {
                 $('#OrdersContainer').html(data);
@@ -85,8 +90,8 @@
         if (confirm('Sei sicuro di voler eliminare la commessa ' + OrderId + '?')) {
             $.ajax({
                 type: "POST",
-                url: "/UserOrders/DeleteWorkOrder",
-                data: { DateTicks: DateTicks, OrderId: OrderId },  //$('#EditOrder').serialize(),
+                url: "/Hours/DeleteWorkOrder",
+                data: { DateTicks: DateTicks, OrderId: OrderId },
                 datatype: "html",
                 success: function (data) {
                     $('#popup').html(data);
@@ -96,3 +101,9 @@
         //alert("Delete" + DateTicks + OrderId);
     }
 </script>
+@if (ViewBag.Error != null)
+{
+    <script>
+        alert('@ViewBag.Error');
+    </script>
+}

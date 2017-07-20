@@ -21,6 +21,7 @@ namespace GseWeb.Models.Account
         public TimeSpan Fri { get; set; }
         public TimeSpan Sat { get; set; }
         public TimeSpan Sun { get; set; }
+        public bool CostDaily { get; set; }
         public TimeSpan ExtraWeek { get; set; }
         public TimeSpan ExtraYear { get; set; }
         public virtual ICollection<User> Users { get; set; }

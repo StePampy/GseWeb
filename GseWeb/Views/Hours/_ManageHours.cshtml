@@ -1,4 +1,6 @@
-﻿@model GseWeb.Models.Hours.Hour
+﻿@using GseWeb.Models;
+
+@model GseWeb.Models.Hours.Hour
 
 @using (Html.BeginForm("CreateEditHours", "Hours", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @id = "BeginFormHours" }))
 {
@@ -12,7 +14,7 @@
 
         @Html.HiddenFor(model => model.UserId)
         @Html.HiddenFor(model => model.DateTicks)
-       
+
         <div class="form-group">
             @Html.LabelFor(model => model.Start, htmlAttributes: new { @class = "control-label col-md-5" })
             <div class="col-md-7">
@@ -62,13 +64,13 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.WorkTime, htmlAttributes: new { @class = "control-label col-md-5" })
+            <label class="control-label col-md-5">Totale Lavorativo</label>
             <div class="col-md-7">
                 <p class="form-control-static">@ShareCode.HHmmString(Model.WorkTime)</p>
             </div>
         </div>
 
-        @if (Model.WorkType == GseWeb.Models.Hours.WorkType.NonGiustificato)
+        @if (ViewBag.lstWorkType != null)
         {
             var lstWorkType = (IEnumerable<SelectListItem>)ViewBag.lstWorkType;
             <div class="form-group">
@@ -79,18 +81,27 @@
                 </div>
             </div>
         }
-        
-        <div class="form-group">
-            <div class="col-md-offset-3 col-md-6">
-                <input type="submit" value="Salva" class="btn btn-default" />
-                <input type="button" value="Chiudi" class="btn btn-default" onclick="closePopup();" />
+        else
+        {
+            @Html.HiddenFor(model => model.WorkType)
+            <div class="form-group">
+                @Html.LabelFor(model => model.WorkType, htmlAttributes: new { @class = "control-label col-md-5" })
+                <div class="col-md-7 form-control-static">
+                    @Model.WorkType.Description();
+                </div>
             </div>
+        }
+
+        <div style="text-align:center;">
+            <input type="submit" value="Salva" class="btn btn-default" />
+            <input type="button" value="Chiudi" class="btn btn-default" onclick="closePopup();" />
         </div>
     </div>
 }
 <script type="text/javascript">
     $('#BeginFormHours').submit(function (e) {
         e.preventDefault(); //prevent submit
+        $('#loading').show();
         $.ajax({
             type: "POST",
             url: "/Hours/CreateEditHours",
@@ -98,10 +109,13 @@
             datatype: "html",
             success: function (data) {
                 $('#popup').html(data);
-            },
-            error: function (data) {
-                $('#HoursContainer').html(data);
             }
+        })
+        .error(function (data) {
+            $('#HoursContainer').html(data.responseText);
+        })
+        .always(function (data) {
+            $('#loading').hide();
         });
         //return false;
     });

@@ -7,10 +7,13 @@
     var permessi = Model.Holidays.Where(x => x.Type == GseWeb.Models.Holiday.Holiday_Type.Permesso).ToArray();
 }
 <div id="popup" style="overflow:hidden; width:auto; height:auto"></div>
+
+@*Loader*@
 <link href="~/Content/loadingPopup-1.1.css" rel="stylesheet" />
 <div id="loading">
     <div class="loader"></div>
 </div>
+
 <h3>
     <span>
         <button class="btn btn-default selectmonth">

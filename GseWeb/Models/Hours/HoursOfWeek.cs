@@ -18,19 +18,11 @@ namespace GseWeb.Models.Hours
             }
         }
 
-        public TimeSpan AmountWorking
+        public TimeSpan ExtraAmount
         {
             get
             {
-                return TimeSpan.FromSeconds(Hours.Sum(x => x.AmountWorking.TotalSeconds));
-            }
-        }
-
-        public TimeSpan AmountFestivity
-        {
-            get
-            {
-                return TimeSpan.FromSeconds(Hours.Sum(x => x.AmountFestivity.TotalSeconds));
+                return TimeSpan.FromSeconds(Hours.Sum(x => x.ExtraAmount.TotalSeconds));
             }
         }
     }

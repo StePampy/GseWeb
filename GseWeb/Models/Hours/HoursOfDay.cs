@@ -138,28 +138,15 @@ namespace GseWeb.Models.Hours
         }
 
         /// <summary>
-        /// Monte Ore Lavorativo
+        /// Monte Ore
         /// </summary>
         [NotMapped]
-        public TimeSpan AmountWorking
+        public TimeSpan ExtraAmount
         {
             get
             {
                 var rec = (WorkTypeRegular == WorkType.Recupero) ? LessTime : new TimeSpan(0);
-                return (IsFestivity || Date.DayOfWeek == DayOfWeek.Sunday) ? new TimeSpan(0) : OrdersTimeWork - WorkTimeRegular - rec;
-            }
-        }
-
-        /// <summary>
-        /// Monte ore Festivo o Domenica
-        /// </summary>
-        [NotMapped]
-        public TimeSpan AmountFestivity
-        {
-            get
-            {
-                var rec = (WorkTypeRegular == WorkType.Recupero) ? LessTime : new TimeSpan(0);
-                return (IsFestivity || Date.DayOfWeek == DayOfWeek.Sunday) ? OrdersTimeWork - WorkTimeRegular - rec : new TimeSpan(0);
+                return  OrdersTimeWork - WorkTimeRegular - rec;
             }
         }
 
@@ -181,9 +168,9 @@ namespace GseWeb.Models.Hours
         {
             get
             {
-                if (Holiday != null && Holiday == Models.Holiday.Holiday_Type.Ferie && OrdinaryRegular != new TimeSpan(0))
+                if (Holiday != null && Holiday == Models.Holiday.Holiday_Type.Ferie && Ordinary != new TimeSpan(0))
                     return WorkType.Ferie;
-                if (Holiday != null && Holiday == Models.Holiday.Holiday_Type.Permesso && OrdinaryRegular != new TimeSpan(0))
+                if (Holiday != null && Holiday == Models.Holiday.Holiday_Type.Permesso && Ordinary != new TimeSpan(0))
                     return WorkType.PermessoRetribuito;
                 if ((WorkTime + Travel) > OrdersTimeComplete)
                     return WorkType.NoCommesse;
@@ -193,7 +180,7 @@ namespace GseWeb.Models.Hours
                     return WorkType.Viaggio;
                 if (LessTime > new TimeSpan(0) && (int)WorkType > 5)
                     return this.WorkType;
-                if (LessTime > new TimeSpan(0) && (int)WorkType <= 5)
+                if (LessTime > new TimeSpan(0) && (int)WorkType <= 5 && Date <= DateTime.Now)
                     return WorkType.NonGiustificato;
                 if (ExtraRegular > new TimeSpan(0))
                     return WorkType.Straordinario;

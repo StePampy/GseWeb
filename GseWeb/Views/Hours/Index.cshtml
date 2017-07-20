@@ -9,6 +9,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@*Loader*@
+<link href="~/Content/loadingPopup-1.1.css" rel="stylesheet" />
+<div id="loading">
+    <div class="loader"></div>
+</div>
+@*Popup*@
 <div id="popup" style="overflow:hidden; width:auto; height:auto"></div>
 
 <div class="col-xs-6">
@@ -22,9 +28,9 @@
             </span>
         }
         <span class="visible-lg-inline visible-md-inline">@MonthName - @Model.Year</span>
-        <span class="visible-sm-inline visible-xs-inline">@Model.Month / @Model.Year</span>
+        <span class="visible-sm-inline visible-xs-inline noprint">@Model.Month/@Model.Year</span>
     </h3>
-    <h4>@(Model.User.FirstName) @(Model.User.LastName)</h4>
+    <h4 title="@ShareCode.HHmmString(Model.ExtraAmount)">@(Model.User.FirstName) @(Model.User.LastName)</h4>
 </div>
 <div class="col-xs-6">
     <table class="table table-condensed" style="font-size: 12px;">
@@ -48,14 +54,13 @@
         }
     </table>
 </div>
-@if (TempData["Error"] != null)
-{
-    <p class="text-danger"><strong>Error:</strong> @TempData["Error"].ToString()</p>
-}
-<p>Monte Mensile: @ShareCode.HHmmString(Model.Amount)</p>
 <table class="table gse-table-header table-condensed">
     <thead>
         <tr>
+            @if (!ViewBag.IsManager)
+            {
+                <th></th>
+            }
             <th>Data</th>
             <th>Presenza</th>
             <th>Ore Previste</th>
@@ -66,13 +71,10 @@
             <th>Causale</th>
             <th>Note</th>
             <th>Commesse</th>
-            <th>Perso</th>
-            <th>Monte Lavoro</th>
-            <th>Monte Festivo</th>
-            <th>Ferie Permessi</th>
-            <th>WorkTime</th>
-            <th>Travel</th>
-            <th>OrdersTimeComplete</th>
+            @if (!ViewBag.IsManager)
+            {
+                <th></th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -82,14 +84,20 @@
             var bgc = (item.WorkTypeRegular != GseWeb.Models.Hours.WorkType.Default) ? ShareCode.WorkTypeColor((int)item.WorkTypeRegular) : "";
             bgc = ShareCode.DayWeekColor((int)item.Date.DayOfWeek, item.IsFestivity, bgc);
             <tr bgcolor="@bgc">
-                <td nowrap>
-                    @ShareCode.DayWeekIT(item.Date)
-                    @item.Date.Day
-                </td>
                 @if (item.WorkTypeRegular != GseWeb.Models.Hours.WorkType.Default)
                 {
-                    <td>
-                        <input type="button" class="btn btn-default btn-xs" value="Modifica" onclick="getPopup('@Url.Action("GetDay", "Hours" , new { year = item.Date.Year, month = item.Date.Month, day = item.Date.Day}, null)')" />
+                    if (!ViewBag.IsManager)
+                    {
+                        <td>
+                            @if (item.WorkTypeRegular != GseWeb.Models.Hours.WorkType.Ferie && item.Date <= DateTime.Now)
+                            {
+                                <input type="button" class="btn btn-default btn-xs" value="Modifica" onclick="getPopup('@Url.Action("GetDay", "Hours", new { year = item.Date.Year, month = item.Date.Month, day = item.Date.Day }, null)')" />
+                            }
+                        </td>
+                    }
+                    <td nowrap>
+                        @ShareCode.DayWeekIT(item.Date)
+                        @item.Date.Day
                     </td>
                     <td>
                         @ShareCode.boolImg(item.Presence)
@@ -123,32 +131,30 @@
                             }
                         </ul>
                     </td>
-                    <td>
-                        @ShareCode.HHmmString(item.LessTime)
-                    </td>
-                    <td>
-                        @ShareCode.HHmmString(item.AmountWorking)
-                    </td>
-                    <td>
-                        @ShareCode.HHmmString(item.AmountFestivity)
-                    </td>
-                    <td>
-                        @ShareCode.HHmmString(item.HolidayTime)
-                    </td>
-                    <td>
-                        @ShareCode.HHmmString(item.WorkTime)
-                    </td>
-                    <td>
-                        @ShareCode.HHmmString(item.Travel)
-                    </td>
-                    <td>
-                        @ShareCode.HHmmString(item.OrdersTimeComplete)
-                    </td>
+                    if (!ViewBag.IsManager)
+                    {
+                        <td>
+                            @if (item.WorkTypeRegular != GseWeb.Models.Hours.WorkType.Ferie && item.Date <= DateTime.Now)
+                            {
+                                @Html.ActionLink("Elimina", "DeleteHour", "Hours", new { DateTicks = item.Date.Ticks, UserId = Model.User.UserId, returnUrl = ViewBag.ReturnUrl }, new { @class = "btn btn-default btn-xs" })
+                            }
+                        </td>
+                    }
                 }
                 else
                 {
-                    <td>
-                        <input type="button" class="btn btn-default btn-xs" value="Aggiungi" onclick="getPopup('@Url.Action("GetDay", "Hours" , new { year = item.Date.Year, month = item.Date.Month, day = item.Date.Day}, null)')" />
+                    if (!ViewBag.IsManager)
+                    {
+                        <td>
+                            @if (item.WorkTypeRegular != GseWeb.Models.Hours.WorkType.Ferie && item.Date <= DateTime.Now)
+                            {
+                                <input type="button" class="btn btn-default btn-xs" value="Aggiungi" onclick="getPopup('@Url.Action("GetDay", "Hours" , new { year = item.Date.Year, month = item.Date.Month, day = item.Date.Day}, null)')" />
+                            }
+                        </td>
+                    }
+                    <td nowrap>
+                        @ShareCode.DayWeekIT(item.Date)
+                        @item.Date.Day
                     </td>
                     <td></td>
                     <td></td>
@@ -159,13 +165,10 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    if (!ViewBag.IsManager)
+                    {
+                        <td></td>
+                    }
                 }
 
             </tr>
@@ -187,7 +190,7 @@
     $('.selectmonth').datepicker().on('changeDate', function (e) {
         var year = e.date.getFullYear();
         var month = e.date.getMonth() + 1;
-        window.location = '/UserWork/ReportMonth?year=' + year + '&month=' + month;
+        window.location = '/Hours/Index?year=' + year + '&month=' + month;
     });
 </script>
 
@@ -207,6 +210,7 @@
     });
 
     function getPopup(Url) {
+        $('#loading').show();
         $.get(Url)
         .success(function (data) {
             $('#popup').html(data);
@@ -215,12 +219,32 @@
             if ($('#popup').closest('.ui-dialog').offset().top < 80) {
                 $('#popup').closest('.ui-dialog').css({ 'top': '80px' });
             }
+        })
+        .error(function (data) {
+            alert(data.responseText);
+        })
+        .always(function (data) {
+            $('#loading').hide();
         });
     }
 
     function closePopup() {
+        $('#loading').show();
         $('#popup').dialog('close');
         location.reload();
-        //window.location = '@Url.Action("Index", "Hours", new { year = Model.Year, month = Model.Month })'
     }
 </script>
+
+@if (TempData["Error"] != null)
+{
+    <script>
+        alert('@TempData["Error"]')
+    </script>
+}
+
+@if (TempData["Success"] != null)
+{
+    <script>
+        alert('@TempData["Success"]')
+    </script>
+}

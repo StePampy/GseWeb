@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using GseWeb.Models.Orders;
 using System.Data.Entity;
 using GseWeb.DAL;
+using System.Net;
 
 namespace GseWeb.Controllers
 {
@@ -195,6 +196,51 @@ namespace GseWeb.Controllers
                 ModelState.AddModelError("", ex.MySqlExMessage());
                 return PartialView("_EditOrderId", model);
             }
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Manager, TeamLeader")]
+        public ActionResult ApproveHours()
+        {
+            var user = db.Users.Find(User.Identity.Name);
+            if (user == null)
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+
+            var hours = user.TeamLeaderOrders
+                .SelectMany(x => x.WorkOrders.Where(o => o.UserId != x.TeamLeaderId && o.UserApprove == null))
+                .OrderByDescending(x => x.Date)
+                .Select(x => new ApproveHour
+                {
+                    OrderId = x.OrderId,
+                    OrderClient = x.Order.Client,
+                    OrderDescription = x.Order.Description,
+                    Date = x.Date,
+                    UserId = x.UserId,
+                    UserInfo = x.User.LastName + " " + x.User.FirstName,
+                    Hours = x.Hours,
+                }).ToArray();
+            return View(hours);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Manager, TeamLeader")]
+        public ActionResult ApproveHour(string UserId, string OrderId, DateTime Date)
+        {
+            try
+            {
+                var entity = db.WorkOrders.Find(UserId, OrderId, Date);
+                if (entity == null)
+                    return HttpNotFound();
+                entity.UserApprove = User.Identity.Name;
+                db.Entry(entity).State = EntityState.Modified;
+                db.SaveChanges();
+                TempData["Success"] = "Approvato con Successo!";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = string.Format("[Errore] {0}", ex.MySqlExMessage());
+            }
+            return RedirectToAction("ApproveHours");
         }
 
         private ActionResult RedirectToLocal(string returnUrl)
