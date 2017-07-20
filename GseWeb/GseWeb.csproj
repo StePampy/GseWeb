@@ -172,7 +172,6 @@
     <Compile Include="Models\UserWork\HoursOfWeek.cs" />
     <Compile Include="Models\UserWork\HoursOfDay.cs" />
     <Compile Include="Models\Hours\Hour.cs" />
-    <Compile Include="Models\Hours\HourResult.cs" />
     <Compile Include="Models\Hours\IHour.cs" />
     <Compile Include="Models\Report\MonthTotal.cs" />
     <Compile Include="Models\Hours\WorkType.cs" />
