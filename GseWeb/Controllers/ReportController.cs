@@ -123,5 +123,20 @@ namespace GseWeb.Controllers
             };
             return PartialView("_ReportLabor", model);
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Manager")]
+        public ActionResult AmountUsers(int year = 0)
+        {
+            year = (year == 0) ? DateTime.Now.Year : year;
+
+            var rep = db.Users.Where(x => x.UserId != "Admin" && ! x.HoursProfile.CostDaily).ToArray()
+                .Select(x => new Models.Hours.HoursOfYear(x.UserId, year)).ToArray()
+            .OrderBy(x => x.User.LastName)
+            .ThenBy(x => x.User.FirstName);
+            ViewBag.Title = string.Format("Monte Ore {0}", year);
+            return View(rep);
+        
+        }
     }
 }

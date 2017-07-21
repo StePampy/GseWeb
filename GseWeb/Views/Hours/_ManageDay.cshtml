@@ -23,7 +23,7 @@
 <h4>Commesse:</h4>
 <p><strong>Ore Disponibili: </strong><span>@ShareCode.HHmmString(avaiableHours)</span></p>
 <div id="OrdersContainer">
-    @if (avaiableHours > new TimeSpan(0))
+    @if (avaiableHours > TimeSpan.Zero)
     {
         @Html.Partial("_ManageWorkOrder", new GseWeb.Models.Orders.WorkOrder
         {

@@ -431,6 +431,7 @@
     <Content Include="Views\Hours\Index.cshtml" />
     <Content Include="Views\Hours\_ManageHours.cshtml" />
     <Content Include="Views\Hours\_ManageWorkOrder.cshtml" />
+    <Content Include="Views\Report\AmountUsers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

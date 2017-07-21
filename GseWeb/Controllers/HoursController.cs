@@ -43,7 +43,7 @@ namespace GseWeb.Controllers
             var model = hYear.Hours.FirstOrDefault(x => x.Date.Month == month && x.Date.Day == day);
             // Aggiungo le liste WorkType e Ordini
             if (model.WorkTypeRegular == WorkType.NonGiustificato || ((int)model.WorkTypeRegular >= (int)WorkType.PermessoNonRetribuito && (int)model.WorkTypeRegular <= (int)WorkType.Viaggio))
-                ViewBag.lstWorkType = DAL.SelectList.WorkTypesNotJustified(model.Travel > new TimeSpan(0), hYear.ExtraAmount > new TimeSpan(0));
+                ViewBag.lstWorkType = DAL.SelectList.WorkTypesNotJustified(model.Travel > TimeSpan.Zero, hYear.ExtraAmount >= model.LessTime);
 
             ViewBag.lstUserOrders = DAL.SelectList.UserOrders(UserId);
             // Titolo del Popup
@@ -157,7 +157,7 @@ namespace GseWeb.Controllers
                         model.Cost = 0;
                     }
                     // Festivo e Domenica
-                    else if (hDay.Ordinary == new TimeSpan(0) && (hDay.WorkTime + hDay.Travel) < new TimeSpan(8,0,0))
+                    else if (hDay.Ordinary == TimeSpan.Zero && (hDay.WorkTime + hDay.Travel) < new TimeSpan(8,0,0))
                     {
                         model.Cost = (user.Cost / new TimeSpan(8, 0, 0).TotalHours) * model.Hours.TotalHours;
                     }
@@ -208,6 +208,8 @@ namespace GseWeb.Controllers
             }
             return GetDay(date.Year, date.Month, date.Day);
         }
+
+        
 
         private string GetTitle(DateTime date)
         {

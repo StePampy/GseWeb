@@ -42,7 +42,7 @@ namespace GseWeb.Models.Hours
         {
             get
             {
-                return (WorkTime + Travel) > new TimeSpan(0);
+                return (WorkTime + Travel) > TimeSpan.Zero;
             }
         }
         /// <summary>
@@ -75,7 +75,7 @@ namespace GseWeb.Models.Hours
             get
             {
                 var cal = OrdersTimeApproved - Travel;
-                return (cal < new TimeSpan(0)) ? new TimeSpan(0) : cal;
+                return (cal < TimeSpan.Zero) ? TimeSpan.Zero : cal;
             }
         }
 
@@ -85,7 +85,7 @@ namespace GseWeb.Models.Hours
             get
             {
                 var cal = OrdersTimeApproved - OrdersTimeWork;
-                return (cal < new TimeSpan(0)) ? new TimeSpan(0) : cal;
+                return (cal < TimeSpan.Zero) ? TimeSpan.Zero : cal;
             }
         }
 
@@ -121,7 +121,7 @@ namespace GseWeb.Models.Hours
             get
             {
                 var cal = WorkTimeRegular - OrdinaryRegular;
-                return (cal < new TimeSpan(0)) ? new TimeSpan(0) : cal;
+                return (cal < TimeSpan.Zero) ? TimeSpan.Zero : cal;
             }
         }
 
@@ -145,7 +145,7 @@ namespace GseWeb.Models.Hours
         {
             get
             {
-                var rec = (WorkTypeRegular == WorkType.Recupero) ? LessTime : new TimeSpan(0);
+                var rec = (WorkTypeRegular == WorkType.Recupero) ? LessTime : TimeSpan.Zero;
                 return  OrdersTimeWork - WorkTimeRegular - rec;
             }
         }
@@ -159,7 +159,7 @@ namespace GseWeb.Models.Hours
             get
             {
                 var cal = OrdinaryRegular - OrdersTimeWork;
-                return (cal < new TimeSpan(0)) ? new TimeSpan(0) : cal;
+                return (cal < TimeSpan.Zero) ? TimeSpan.Zero : cal;
             }
         }
 
@@ -168,21 +168,21 @@ namespace GseWeb.Models.Hours
         {
             get
             {
-                if (Holiday != null && Holiday == Models.Holiday.Holiday_Type.Ferie && Ordinary != new TimeSpan(0))
+                if (Holiday != null && Holiday == Models.Holiday.Holiday_Type.Ferie && Ordinary != TimeSpan.Zero)
                     return WorkType.Ferie;
-                if (Holiday != null && Holiday == Models.Holiday.Holiday_Type.Permesso && Ordinary != new TimeSpan(0))
-                    return WorkType.PermessoRetribuito;
                 if ((WorkTime + Travel) > OrdersTimeComplete)
                     return WorkType.NoCommesse;
                 if (OrdersTimeApproved != OrdersTimeComplete)
                     return WorkType.NoApproved;
                 if (OrdersTimeTravel > OrdinaryRegular)
                     return WorkType.Viaggio;
-                if (LessTime > new TimeSpan(0) && (int)WorkType > 5)
+                if (LessTime > TimeSpan.Zero && (int)WorkType > 5 && (int)WorkType < 11)
                     return this.WorkType;
-                if (LessTime > new TimeSpan(0) && (int)WorkType <= 5 && Date <= DateTime.Now)
+                if (LessTime > TimeSpan.Zero && !((int)WorkType > 5 && (int)WorkType < 11) && Date <= DateTime.Now)
                     return WorkType.NonGiustificato;
-                if (ExtraRegular > new TimeSpan(0))
+                if (Holiday != null && Holiday == Models.Holiday.Holiday_Type.Permesso && Ordinary != TimeSpan.Zero)
+                    return WorkType.PermessoRetribuito;
+                if (ExtraRegular > TimeSpan.Zero)
                     return WorkType.Straordinario;
                 if (!Presence)
                     return WorkType.Default;

@@ -8,7 +8,10 @@
     ViewBag.Title = string.Format("{0} - {1}", MonthName, Model.Year);
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@if (ViewBag.IsManager)
+{
+    @Html.ActionLink("Indietro", "ReportUsers", "Report", new { year = Model.Year, month = Model.Month }, null)
+}
 @*Loader*@
 <link href="~/Content/loadingPopup-1.1.css" rel="stylesheet" />
 <div id="loading">
@@ -156,8 +159,12 @@
                         @ShareCode.DayWeekIT(item.Date)
                         @item.Date.Day
                     </td>
-                    <td></td>
-                    <td></td>
+                    <td>
+                        @ShareCode.boolImg(item.Presence)
+                    </td>
+                    <td>
+                        @ShareCode.HHmmString(item.OrdinaryRegular)
+                    </td>
                     <td></td>
                     <td></td>
                     <td></td>

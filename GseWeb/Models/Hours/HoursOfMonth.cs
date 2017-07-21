@@ -52,16 +52,16 @@ namespace GseWeb.Models.Hours
                 Value = TimeSpan.FromSeconds(Hours.Sum(x => x.WorkTimeRegular.TotalSeconds))
             });
             // Aggiungo Straordinario
-            if (Hours.Any(x => x.ExtraRegular > new TimeSpan(0)))
+            if (Hours.Any(x => x.ExtraRegular > TimeSpan.Zero))
             {
                 report.Add(new HoursReport
                 {
                     Id = 2,
-                    Description = "Straordinario",
+                    Description = WorkType.Straordinario.Description(),
                     Value = TimeSpan.FromSeconds(Hours.Sum(x => x.ExtraRegular.TotalSeconds))
                 });
             }
-            
+
             // Aggiungo le Presenze
             report.Add(new HoursReport
             {
@@ -81,13 +81,23 @@ namespace GseWeb.Models.Hours
                 });
             }
             // Aggiungo Viaggio
-            if (Hours.Any(x => x.OrdersTimeTravel > new TimeSpan(0)))
+            if (Hours.Any(x => x.OrdersTimeTravel > TimeSpan.Zero))
             {
                 report.Add(new HoursReport
                 {
                     Id = 999,
-                    Description = "Viaggio",
+                    Description = WorkType.Viaggio.Description(),
                     Value = TimeSpan.FromSeconds(Hours.Sum(x => x.OrdersTimeTravel.TotalSeconds))
+                });
+            }
+            var permes = Hours.Where(x => x.Holiday != null && x.Holiday == Holiday.Holiday_Type.Permesso);
+            if (permes.Any())
+            {
+                report.Add(new HoursReport
+                {
+                    Id = 5,
+                    Description = WorkType.PermessoRetribuito.Description(),
+                    Value = TimeSpan.FromSeconds(permes.Sum(x => x.HolidayTime.TotalSeconds))
                 });
             }
             Report = report.OrderBy(x => x.Id).ToArray();
@@ -98,7 +108,6 @@ namespace GseWeb.Models.Hours
             switch (values.Key)
             {
                 case WorkType.Ferie:
-                case WorkType.PermessoRetribuito:
                     return TimeSpan.FromSeconds(values.Sum(x => x.HolidayTime.TotalSeconds));
                 case WorkType.NonGiustificato:
                 case WorkType.PermessoNonRetribuito:
@@ -112,7 +121,7 @@ namespace GseWeb.Models.Hours
                 case WorkType.NoApproved:
                     return TimeSpan.FromSeconds(values.Sum(x => x.OrdersTimeComplete.TotalSeconds) - values.Sum(x => x.OrdersTimeApproved.TotalSeconds));
                 default:
-                    return new TimeSpan(0);
+                    return TimeSpan.Zero;
             }
         }
     }

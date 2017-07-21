@@ -1,0 +1,33 @@
+﻿@model IEnumerable<GseWeb.Models.Hours.HoursOfYear>
+
+@{
+    //ViewBag.Title = "AmountUsers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<table class="table">
+    <tr>
+        <th>Utente</th>
+        <th>
+            Monte Ore
+        </th>
+        <th>Straordinario Previsto</th>
+        <th>Straordinario Svolto</th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @item.User.LastName @item.User.FirstName
+        </td>
+        <td>
+            @ShareCode.HHmmString(item.ExtraAmount)
+        </td>
+        <td>@ShareCode.HHmmString(item.ExtraExpected)</td>
+        <td>@ShareCode.HHmmString(item.ExtraDone)</td>
+    </tr>
+}
+
+</table>

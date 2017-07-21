@@ -15,7 +15,7 @@ namespace GseWeb.Models.Hours
         {
             get
             {
-                return TimeSpan.FromSeconds(HoursOfWeek.Sum(x => x.ExtraDone.TotalSeconds));
+                return TimeSpan.FromSeconds(Hours.Sum(x => x.ExtraRegular.TotalSeconds));
             }
         }
 
@@ -55,10 +55,21 @@ namespace GseWeb.Models.Hours
             // Calcoli delle ore rimaneti di straordinario
             foreach (var w in HoursOfWeek)
             {
+                // Verifico se sono finite le ore dell'anno
+                if ((ExtraExpected - ExtraDone) <= TimeSpan.Zero)
+                    break;
                 foreach (var h in w.Hours)
                 {
                     var exYear = ExtraExpected - ExtraDone;
+                    // Verifico se sono finite le ore dell'anno
+                    if (exYear <= TimeSpan.Zero)
+                        break;
                     var exWeek = w.ExtraExpected - w.ExtraDone;
+
+                    // Verifico se sono finite le ore della settimana
+                    if (exWeek <= TimeSpan.Zero)
+                        break;
+
                     var exExp = (h.IsFestivity || h.Date.DayOfWeek == DayOfWeek.Sunday || h.Date.DayOfWeek == DayOfWeek.Saturday) ? new TimeSpan(8, 0, 0) : new TimeSpan(2, 0, 0);
                     // Verifico di non aver superato la settimana
                     exExp = (exExp > exWeek) ? exWeek : exExp;
