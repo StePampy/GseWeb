@@ -68,11 +68,9 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.Closed, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.Closed)
-                    @Html.ValidationMessageFor(model => model.Closed, "", new { @class = "text-danger" })
-                </div>
+            <div class="col-md-10 form-control-static">
+                @Html.CheckBoxFor(model => model.Closed)
+                @Html.ValidationMessageFor(model => model.Closed, "", new { @class = "text-danger" })
             </div>
         </div>
 

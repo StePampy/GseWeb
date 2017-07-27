@@ -2,31 +2,140 @@
 @{
     ViewBag.Title = "Home";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var role = ((FormsIdentity)User.Identity).Ticket.UserData;
 }
+
+<style>
+    .text-white {
+        color: white !important;
+    }
+</style>
+
 <br />
-<a class="btn btn-default btn-lg" href="@Url.Action("Index","Hours")">
-    <p>Gestione</p>
-    <p>Ore</p>
-</a>
-<a class="btn btn-default btn-lg" href="@Url.Action("Index","Expense")">
-    <p>Rimborsi</p>
-    <p>Spese</p>
-</a>
-<a class="btn btn-default btn-lg" href="@Url.Action("Index","Vehicle")">
-    <p>Rimborsi</p>
-    <p>Chilometrici</p>
-</a>
-<hr />
-<div class="form-group thumbnail">
-    <h4>Dati per Fatturazione</h4>
-    <p><strong>G.S.E. Automation S.r.l.</strong> (Società unipersonale)</p>
-    <p><strong>Indirizzo:</strong> Via Confraternita, 26 - 12031, Bagnolo Piemonte (CN) - Italia</p>
-    <p><strong>P.IVA:</strong> 03565070046</p>
-    <p><strong>E-mail:</strong> amministrazione@gseautomation.it</p>
-    <p><strong>Tel:</strong> +39 0121032432</p>
-    <p><strong>Fax:</strong> +39 0121032432</p>
-    @*<a href="mailto:?subject=I wanted you to see this site&amp;body=Check out this site http://www.website.com."
-       title="Share by Email">
-        <img src="http://png-2.findicons.com/files/icons/573/must_have/48/mail.png">
-    </a>*@
+<br class="visible-sm visible-xs" />
+
+<div class="col-md-6">
+    <div class="visible-lg visible-md">
+        <div class="btn-group-justified">
+            <a class="btn btn-default btn-lg text-white" href="@Url.Action("Index","Hours")" style="background-color: #005E8C;">
+                <p class="glyphicon glyphicon-time" style="font-size: 40px;"></p>
+                <p style="white-space:normal">
+                    Gestione Ore
+                </p>
+            </a>
+            <a class="btn btn-default btn-lg text-white" href="@Url.Action("Index","Expense")" style="background-color: #87AD1A;">
+                <p class="glyphicon glyphicon-euro" style="font-size: 40px;"></p>
+                <p style="white-space:normal">
+                    Rimborsi Spese
+                </p>
+            </a>
+            <a class="btn btn-default btn-lg text-white" href="@Url.Action("Index","Vehicle")" style="background-color: #7A461F;">
+                <p class="glyphicon glyphicon-road" style="font-size: 40px;"></p>
+                <p style="white-space:normal">
+                    Rimborsi Chilometrici
+                </p>
+            </a>
+        </div>
+        @if (role == "TeamLeader" || role == "Manager")
+        {
+            <div class="btn-group-justified">
+                <a class="btn btn-default btn-lg text-white" href="@Url.Action("ReportOrders","Report")" style="background-color: #FF8800;">
+                    <p class="glyphicon glyphicon-list-alt" style="font-size: 40px;"></p>
+                    <p style="white-space:normal">
+                        Stato Commesse
+                    </p>
+                </a>
+
+                <a class="btn btn-default btn-lg text-white" href="@Url.Action("ApproveHours", "Orders")" style="background-color: #E23700;">
+                    <p style="font-size: 40px;">
+                        <span class="glyphicon glyphicon-thumbs-up"></span>
+                        <span class="glyphicon glyphicon-time"></span>
+                    </p>
+                    <p style="white-space:normal">
+                        Approva Ore
+                    </p>
+                </a>
+                <a class="btn btn-default btn-lg text-white" href="@Url.Action("Approve", "Vehicle")" style="background-color: #8A5DB0;">
+                    <p style="font-size: 40px;">
+                        <span class="glyphicon glyphicon-thumbs-up"></span>
+                        <span class="glyphicon glyphicon-road"></span>
+                    </p>
+                    <p style="white-space:normal">
+                        Approva Rimborsi Chilometrici
+                    </p>
+                </a>
+            </div>
+        }
+    </div>
+
+    
+
+    <div class="btn-group-vertical visible-sm visible-xs">
+        <a class="btn btn-default btn-lg text-white" href="@Url.Action("Index","Hours")" style="background-color: #005E8C;">
+            <span class="glyphicon glyphicon-time" style="font-size: 20px;"></span>
+            <span style="white-space:normal">
+                Gestione Ore
+            </span>
+        </a>
+        <a class="btn btn-default btn-lg text-white" href="@Url.Action("Index","Expense")" style="background-color: #87AD1A;">
+            <span class="glyphicon glyphicon-euro" style="font-size: 20px;"></span>
+            <span style="white-space:normal">
+                Rimborsi Spese
+            </span>
+        </a>
+        <a class="btn btn-default btn-lg text-white" href="@Url.Action("Index","Vehicle")" style="background-color: #7A461F;">
+            <span class="glyphicon glyphicon-road" style="font-size: 20px;"></span>
+            <span style="white-space:normal">
+                Rimborsi Chilometrici
+            </span>
+        </a>
+
+        @if (role == "TeamLeader" || role == "Manager")
+        {
+            <a class="btn btn-default btn-lg text-white" href="@Url.Action("ReportOrders","Report")" style="background-color: #FF8800;">
+                <span class="glyphicon glyphicon-list-alt" style="font-size: 20px;"></span>
+                <span style="white-space:normal">
+                    Stato Commesse
+                </span>
+            </a>
+            <a class="btn btn-default btn-lg text-white" href="@Url.Action("ApproveHours", "Orders")" style="background-color: #E23700;">
+                <span style="font-size: 20px;">
+                    <span class="glyphicon glyphicon-thumbs-up"></span>
+                    <span class="glyphicon glyphicon-time"></span>
+                </span>
+                <span style="white-space:normal">
+                    Approva Ore
+                </span>
+            </a>
+            <a class="btn btn-default btn-lg text-white" href="@Url.Action("Approve", "Vehicle")" style="background-color: #8A5DB0;">
+                <span style="font-size: 20px;">
+                    <span class="glyphicon glyphicon-thumbs-up"></span>
+                    <span class="glyphicon glyphicon-road"></span>
+                </span>
+                <span style="white-space:normal">
+                    Approva Rimborsi Chilometrici
+                </span>
+            </a>
+        }
+    </div>
 </div>
+
+
+<hr class="visible-sm visible-xs" />
+
+<div class="col-md-6">
+    <div class="form-group thumbnail">
+        <h4>Dati per Fatturazione</h4>
+        <p><strong>G.S.E. Automation S.r.l.</strong> (Società unipersonale)</p>
+        <p><strong>Indirizzo:</strong> Via Confraternita, 26 - 12031, Bagnolo Piemonte (CN) - Italia</p>
+        <p><strong>P.IVA:</strong> 03565070046</p>
+        <p><strong>E-mail:</strong> amministrazione@gseautomation.it</p>
+        <p><strong>Tel:</strong> +39 0121032432</p>
+        <p><strong>Fax:</strong> +39 0121032432</p>
+        @*<a href="mailto:?subject=I wanted you to see this site&amp;body=Check out this site http://www.website.com."
+               title="Share by Email">
+                <img src="http://png-2.findicons.com/files/icons/573/must_have/48/mail.png">
+            </a>*@
+    </div>
+</div>
+<br />

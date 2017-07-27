@@ -136,11 +136,11 @@
     </div>
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - GSE Automation S.r.l. - I.T. Department</p>
-        </footer>
     </div>
+    <hr />
+    <footer>
+        <p>&copy; @DateTime.Now.Year - GSE Automation S.r.l. - I.T. Department</p>
+    </footer>
     @RenderSection("scripts", required: false)
 </body>
 </html>
