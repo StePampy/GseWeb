@@ -52,7 +52,7 @@ namespace GseWeb.Models.Hours
                     Hours = x,
                     ExtraExpected = ExtraWeek
                 });
-            // Calcoli delle ore rimaneti di straordinario
+            // Calcoli delle ore rimanenti di straordinario
             foreach (var w in HoursOfWeek)
             {
                 // Verifico se sono finite le ore dell'anno

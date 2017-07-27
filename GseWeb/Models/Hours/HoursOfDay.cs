@@ -174,7 +174,7 @@ namespace GseWeb.Models.Hours
                     return WorkType.NoCommesse;
                 if (OrdersTimeApproved != OrdersTimeComplete)
                     return WorkType.NoApproved;
-                if (OrdersTimeTravel > OrdinaryRegular)
+                if (OrdersTimeTravel > TimeSpan.Zero && (OrdersTimeTravel + OrdersTimeWork) >= OrdinaryRegular)
                     return WorkType.Viaggio;
                 if (LessTime > TimeSpan.Zero && (int)WorkType > 5 && (int)WorkType < 11)
                     return this.WorkType;

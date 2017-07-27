@@ -7,8 +7,11 @@ namespace GseWeb.Models.Hours
 {
     public class HoursOfMonth
     {
+        private DAL.GestionaleDB db = new DAL.GestionaleDB();
+
         public int Year { get; set; }
         public int Month { get; set; }
+        public bool Frozen { get; set; }
         public HoursOfYear HoursOfYear { get; set; }
         public Account.User User { get { return HoursOfYear.User; } }
         public IEnumerable<HoursOfDay> Hours { get { return HoursOfYear.Hours.Where(x => x.Date.Month == Month); } }
@@ -27,6 +30,11 @@ namespace GseWeb.Models.Hours
         {
             this.Year = Year;
             this.Month = Month;
+
+            // Verifico se il mese e congelato
+            this.Frozen = db.MonthsFrozen.Any(x => x.Year == Year && x.Month == Month);
+
+            //Carico le ore annuali
             this.HoursOfYear = new HoursOfYear(UserId, Year);
 
             var report = Hours.Where(x => x.WorkTypeRegular != WorkType.Default && x.WorkTypeRegular != WorkType.Lavoro && x.WorkTypeRegular != WorkType.Straordinario && x.WorkTypeRegular != WorkType.Viaggio)
@@ -49,7 +57,7 @@ namespace GseWeb.Models.Hours
             {
                 Id = 1,
                 Description = "Ordinario Svolto",
-                Value = TimeSpan.FromSeconds(Hours.Sum(x => x.WorkTimeRegular.TotalSeconds))
+                Value = TimeSpan.FromSeconds(Hours.Sum(x => x.WorkTimeOrdinary.TotalSeconds))
             });
             // Aggiungo Straordinario
             if (Hours.Any(x => x.ExtraRegular > TimeSpan.Zero))

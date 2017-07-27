@@ -8,10 +8,13 @@
     ViewBag.Title = string.Format("{0} - {1}", MonthName, Model.Year);
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 @if (ViewBag.IsManager)
 {
     @Html.ActionLink("Indietro", "ReportUsers", "Report", new { year = Model.Year, month = Model.Month }, null)
+    <br />
 }
+
 @*Loader*@
 <link href="~/Content/loadingPopup-1.1.css" rel="stylesheet" />
 <div id="loading">
@@ -60,7 +63,7 @@
 <table class="table gse-table-header table-condensed">
     <thead>
         <tr>
-            @if (!ViewBag.IsManager)
+            @if (!ViewBag.IsManager && !Model.Frozen)
             {
                 <th></th>
             }
@@ -74,7 +77,7 @@
             <th>Causale</th>
             <th>Note</th>
             <th>Commesse</th>
-            @if (!ViewBag.IsManager)
+            @if (!ViewBag.IsManager && !Model.Frozen)
             {
                 <th></th>
             }
@@ -89,7 +92,7 @@
             <tr bgcolor="@bgc">
                 @if (item.WorkTypeRegular != GseWeb.Models.Hours.WorkType.Default)
                 {
-                    if (!ViewBag.IsManager)
+                    if (!ViewBag.IsManager && !Model.Frozen)
                     {
                         <td>
                             @if (item.WorkTypeRegular != GseWeb.Models.Hours.WorkType.Ferie && item.Date <= DateTime.Now)
@@ -134,7 +137,7 @@
                             }
                         </ul>
                     </td>
-                    if (!ViewBag.IsManager)
+                    if (!ViewBag.IsManager && !Model.Frozen)
                     {
                         <td>
                             @if (item.WorkTypeRegular != GseWeb.Models.Hours.WorkType.Ferie && item.Date <= DateTime.Now)
@@ -146,7 +149,7 @@
                 }
                 else
                 {
-                    if (!ViewBag.IsManager)
+                    if (!ViewBag.IsManager && !Model.Frozen)
                     {
                         <td>
                             @if (item.WorkTypeRegular != GseWeb.Models.Hours.WorkType.Ferie && item.Date <= DateTime.Now)
@@ -172,7 +175,7 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    if (!ViewBag.IsManager)
+                    if (!ViewBag.IsManager && !Model.Frozen)
                     {
                         <td></td>
                     }
