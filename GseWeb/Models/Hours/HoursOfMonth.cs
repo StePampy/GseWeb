@@ -37,7 +37,8 @@ namespace GseWeb.Models.Hours
             //Carico le ore annuali
             this.HoursOfYear = new HoursOfYear(UserId, Year);
 
-            var report = Hours.Where(x => x.WorkTypeRegular != WorkType.Default && x.WorkTypeRegular != WorkType.Lavoro && x.WorkTypeRegular != WorkType.Straordinario && x.WorkTypeRegular != WorkType.Viaggio)
+            var wtExcludes = new WorkType[] { WorkType.Default, WorkType.Lavoro, WorkType.Straordinario, WorkType.Viaggio, WorkType.PermessoRetribuito };
+            var report = Hours.Where(x => ! wtExcludes.Contains(x.WorkTypeRegular))
                     .GroupBy(x => x.WorkTypeRegular)
                     .Select(x => new HoursReport
                     {
@@ -50,7 +51,7 @@ namespace GseWeb.Models.Hours
             {
                 Id = 0,
                 Description = "Ordinario Previsto",
-                Value = TimeSpan.FromSeconds(Hours.Sum(x => x.OrdinaryRegular.TotalSeconds))
+                Value = TimeSpan.FromSeconds(Hours.Sum(x => x.Ordinary.TotalSeconds))
             });
             // Aggiungo ordinario effettuato
             report.Add(new HoursReport
@@ -98,6 +99,7 @@ namespace GseWeb.Models.Hours
                     Value = TimeSpan.FromSeconds(Hours.Sum(x => x.OrdersTimeTravel.TotalSeconds))
                 });
             }
+            // Permesso retribuito
             var permes = Hours.Where(x => x.Holiday != null && x.Holiday == Holiday.Holiday_Type.Permesso);
             if (permes.Any())
             {

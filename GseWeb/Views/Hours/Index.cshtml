@@ -69,10 +69,10 @@
             }
             <th>Data</th>
             <th>Presenza</th>
-            <th>Ore Previste</th>
-            <th>Ore Ord.</th>
-            <th>Ore Straord.</th>
-            <th>Ore Viaggio</th>
+            <th>Ord. Previsto</th>
+            <th>Ord. Svolto</th>
+            <th>Straord.</th>
+            <th>Viaggio</th>
             <th>Trasferta</th>
             <th>Causale</th>
             <th>Note</th>
@@ -109,7 +109,7 @@
                         @ShareCode.boolImg(item.Presence)
                     </td>
                     <td>
-                        @ShareCode.HHmmString(item.OrdinaryRegular)
+                        @ShareCode.HHmmString(item.Ordinary)
                     </td>
                     <td>
                         @ShareCode.HHmmString(item.WorkTimeOrdinary)
@@ -124,7 +124,24 @@
                         @ShareCode.boolImg(item.OffSite)
                     </td>
                     <td>
-                        @item.WorkTypeRegular.Description()
+                        @if (item.LessTime > TimeSpan.Zero && item.WorkTypeRegular != GseWeb.Models.Hours.WorkType.PermessoRetribuito)
+	                    {
+                            <p>
+                                @ShareCode.HHmmString(item.LessTime)
+                                @item.WorkTypeRegular.Description()
+                            </p>
+                        }
+                        @if (item.Holiday != null)
+                        {
+                            <p>
+                                @ShareCode.HHmmString(item.HolidayTime)
+                                @item.Holiday.Description()
+                            </p>
+                        }
+                        @if (item.LessTime == TimeSpan.Zero && item.Holiday == null)
+                        {
+                            @item.WorkTypeRegular.Description()
+                        }
                     </td>
                     <td>
                         @item.Note
@@ -166,7 +183,7 @@
                         @ShareCode.boolImg(item.Presence)
                     </td>
                     <td>
-                        @ShareCode.HHmmString(item.OrdinaryRegular)
+                        @ShareCode.HHmmString(item.Ordinary)
                     </td>
                     <td></td>
                     <td></td>
