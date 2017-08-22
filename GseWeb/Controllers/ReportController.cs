@@ -39,7 +39,6 @@ namespace GseWeb.Controllers
             var order = db.Orders.Find(OrderId);
             if (order == null)
                 return HttpNotFound();
-
             // Modello da ritornare
             var model = ReportOrderVM.GetFromOrder(order);
             return View(model);

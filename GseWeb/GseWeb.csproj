@@ -44,6 +44,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ClosedXML">
+      <HintPath>..\..\..\..\Ferrero\TestWeb\bin\ClosedXML.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -144,6 +147,7 @@
     <Compile Include="Controllers\FestivityController.cs" />
     <Compile Include="Controllers\HolidayController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MaterialController.cs" />
     <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\HoursController.cs" />
@@ -162,6 +166,7 @@
     <Compile Include="Models\Holiday\HolidayDay.cs" />
     <Compile Include="Models\Holiday\HolidayManager.cs" />
     <Compile Include="Models\Holiday\HolidayUser.cs" />
+    <Compile Include="Models\Materials\Material.cs" />
     <Compile Include="Models\MonthFrozen.cs" />
     <Compile Include="Models\Orders\EditOrderId.cs" />
     <Compile Include="Models\Hours\Festivity.cs" />
@@ -261,8 +266,15 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Images\LogoVert.png" />
-    <Content Include="Images\LogoTrasparente.png" />
+    <Content Include="Images\LogoExcel.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\LogoVert.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\LogoTrasparente.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="gseicon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -432,6 +444,7 @@
     <Content Include="Views\Hours\_ManageHours.cshtml" />
     <Content Include="Views\Hours\_ManageWorkOrder.cshtml" />
     <Content Include="Views\Report\AmountUsers.cshtml" />
+    <Content Include="Views\Material\_CreateEditMaterial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

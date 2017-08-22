@@ -69,7 +69,7 @@ namespace GseWeb.Models.Report
                 Cost_Hours = order.WorkOrders.Where(o => o.UserId == order.TeamLeaderId || o.UserApprove != null).Sum(o => o.Cost),
                 Cost_Vehicles = order.WorkVehicles.Where(v => v.UserId == order.TeamLeaderId || v.UserApprove != null).Sum(v => v.Cost_Total),
                 Cost_Expenses = 0,
-                Cost_Materials = 0,
+                Cost_Materials = order.Materials.Sum(m => m.Total_Used),
                 Cost_Various = 0,
                 FinishDate = order.FinishDate,
                 TeamLeaderInfo = order.TeamLeader.LastName + ' ' + order.TeamLeader.FirstName,

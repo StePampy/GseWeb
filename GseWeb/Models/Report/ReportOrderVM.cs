@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using GseWeb.Models.Orders;
+using GseWeb.Models.Materials;
 
 namespace GseWeb.Models.Report
 {
@@ -11,15 +12,16 @@ namespace GseWeb.Models.Report
     {
         public ReportOrderDetails Order { get; set; }
         public IEnumerable<ReportOrderLabor_User> Users { get; set; }
-        public IEnumerable<ReportOrderLabor_Month> Month { get; set; }
-
+        public IEnumerable<ReportOrderLabor_Month> Months { get; set; }
+        public IEnumerable<Material> Materials { get; set; }
         public static ReportOrderVM GetFromOrder(Order order)
         {
             return new ReportOrderVM
             {
                 Order = ReportOrderDetails.FromOrder(order),
                 Users = ReportOrderLabor_User.GetFromOrder(order),
-                Month = ReportOrderLabor_Month.GetFromOrder(order),
+                Months = ReportOrderLabor_Month.GetFromOrder(order),
+                Materials = order.Materials.ToArray().OrderBy(x => x.Supplier).ThenByDescending(x => x.Date),
             };
         }
     }

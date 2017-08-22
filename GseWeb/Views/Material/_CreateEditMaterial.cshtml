@@ -1,0 +1,100 @@
+﻿@model GseWeb.Models.Materials.Material
+
+
+@using (Html.BeginForm("CreateEditMaterial", "Material", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @id = "BeginForm" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.OrderId)
+        @*@Html.HiddenFor(model => model.UserId)*@
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Supplier, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Supplier, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Supplier, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Amount_Ordered, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Amount_Ordered, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Amount_Ordered, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Amount_Used, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Amount_Used, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Amount_Used, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Ordered, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7 form-control-static">
+                @Html.CheckBoxFor(model => model.Ordered)
+                @Html.ValidationMessageFor(model => model.Ordered, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Recived, htmlAttributes: new { @class = "control-label col-md-5" })
+            <div class="col-md-7 form-control-static">
+                @Html.CheckBoxFor(model => model.Recived)
+                @Html.ValidationMessageFor(model => model.Recived, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div style="text-align:center;">
+            <input type="submit" value="Salva" class="btn btn-default" />
+            <input type="button" value="Annulla" class="btn btn-default" onclick="closePopup();" />
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $("#popup").dialog('option', 'title', '@ViewBag.Title');
+    $('#BeginForm').submit(function (e) {
+        e.preventDefault(); //prevent submit
+        $.ajax({
+            type: "POST",
+            url: "/Material/CreateEditMaterial?ReturnUrl=@ViewBag.ReturnUrl",
+            data: $('#BeginForm').serialize(),
+            datatype: "html",
+            success: function (data) {
+                $('#popup').html(data);
+            }
+        });
+        //return false;
+    });
+</script>

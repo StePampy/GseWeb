@@ -58,5 +58,8 @@ namespace GseWeb.Models.Orders
 
         [ForeignKey("OrderId")]
         public virtual ICollection<WorkVehicle> WorkVehicles { get; set; }
+
+        [ForeignKey("OrderId")]
+        public virtual ICollection<Materials.Material> Materials { get; set; }
     }
 }

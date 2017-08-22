@@ -24,6 +24,22 @@
     .green {
         background-color: green;
     }
+
+    .yellow {
+        background-color: yellow;
+    }
+
+    .btn-export {
+        height: 34px;
+        width: 34px;
+        padding: 0;
+    }
+
+        .btn-export > img {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+        }
 </style>
 
 <script>
@@ -172,7 +188,7 @@
             </tr>
         }
     </tbody>
-    @foreach (var month in Model.Month)
+    @foreach (var month in Model.Months)
     {
         var MonthName = CInfIT.TextInfo.ToTitleCase(CInfIT.DateTimeFormat.GetMonthName(month.Month));
         <tr class="HiddenMonth">
@@ -227,7 +243,198 @@
         </tbody>
     }
 </table>
+
+<hr />
+<h4>
+    <span>
+        <a onclick="getPopup('@Url.Action("GetMaterial", "Material", new { OrderId = Model.Order.OrderId, returnUrl = Request.Url.PathAndQuery })')" style="cursor:pointer;">
+            <span class="glyphicon glyphicon-plus-sign text-success"></span>
+            Materiale
+        </a>
+    </span>
+    @if (Model.Materials.Count() > 0)
+    {
+        <span class="pull-right">
+            <span class="pull-right">
+                <a class="btn btn-default btn-export"href="@Url.Action("Export","Material", new { OrderId = Model.Order.OrderId })">
+                    <img src="~/Images/LogoExcel.ico" />
+                </a>
+            </span>
+            <span class="pull-right">
+                <input type="text" id="search" class="form-control" placeholder="Cerca" />
+            </span>
+        </span>
+    }
+</h4>
+@if (Model.Materials.Count() > 0)
+{
+    <table id="tableMaterials" class="table table-condensed gse-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>
+                    Data
+                </th>
+                <th>
+                    Fornitore
+                </th>
+                <th>
+                    Codice Materiale
+                </th>
+                <th>
+                    Descrizione
+                </th>
+                <th>
+                    Quantità Ordinata
+                </th>
+                <th>
+                    Quantità Utilizzata
+                </th>
+                <th>
+                    Quantità Rimanente
+                </th>
+                <th>
+                    Prezzo Unit.
+                </th>
+                <th>
+                    Totale Utilizzato
+                </th>
+                <th>
+                    Totale Rimanente
+                </th>
+                <th nowrap>
+                    <span>Ordinato</span>
+                    <div class="dropdown pull-right">
+                        <button id="filterOrd" class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a onclick="FilterOrder('#OrdTrue');">SI</a></li>
+                            <li><a onclick="FilterOrder('#OrdFalse');">NO</a></li>
+                            <li><a onclick="FilterOrder('');">TUTTI</a></li>
+                        </ul>
+                    </div>
+                </th>
+                <th>
+                    <span>Ricevuto</span>
+                    <div class="dropdown pull-right">
+                        <button id="filterRec" class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a onclick="FilterRecive('#RecTrue');">SI</a></li>
+                            <li><a onclick="FilterRecive('#RecFalse');">NO</a></li>
+                            <li><a onclick="FilterRecive('');">TUTTI</a></li>
+                        </ul>
+                    </div>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var m in Model.Materials)
+            {
+                <tr>
+                    <td>
+                        <input type="button" class="btn btn-default btn-xs" value="Modifica" onclick="getPopup('@Url.Action("GetMaterial", "Material", new { Id = m.Id, returnUrl = Request.Url.PathAndQuery })')" />
+                    </td>
+                    <td>
+                        @m.Date.ToString("dd/MM/yyyy")
+                    </td>
+                    <td>
+                        @m.Supplier
+                    </td>
+                    <td>
+                        @m.Code
+                    </td>
+                    <td>
+                        @m.Description
+                    </td>
+                    <td>
+                        @m.Amount_Ordered
+                    </td>
+                    <td>
+                        @m.Amount_Used
+                    </td>
+                    <td>
+                        @m.Amount_NotUsed
+                    </td>
+                    <td>
+                        @m.Price.ToString("C", CInfIT)
+                    </td>
+                    <td>
+                        @m.Total_Used.ToString("C", CInfIT)
+                    </td>
+                    <td>
+                        @m.Total_NotUsed.ToString("C", CInfIT)
+                    </td>
+                    <td style="text-align:center">
+                        @ShareCode.boolImg(m.Ordered)
+                    </td>
+                    <td style="text-align:center">
+                        @ShareCode.boolImg(m.Recived)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Elimina", "DeleteMaterial", "Material", new { Id = m.Id, returnUrl = Request.Url.PathAndQuery }, new { @class = "btn btn-default btn-xs", @onclick = "return confirm('Sicuro di Voler Eliminare?');" })
+                    </td>
+                    <td style="display:none;">
+                        @((m.Ordered) ? "#OrdTrue" : "#OrdFalse")
+                    </td>
+                    <td style="display:none;">
+                        @((m.Recived) ? "#RecTrue" : "#RecFalse")
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<hr />
 @Html.ActionLink("Indietro", "ReportOrders")
+
+@*Cerca Materiali*@
+<script>
+    var $rowsMaterial = $('#tableMaterials tbody tr');
+    var $filterText = '';
+    var $filterOrder = '';
+    var $filterRecive = '';
+
+    // Input cerca
+    $('#search').keyup(function () {
+        $filterText = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+        FilterMaterial();
+    });
+
+    // Filtro Ordinate
+    function FilterOrder(val) {
+        $filterOrder = $.trim(val).replace(/ +/g, ' ').toLowerCase();
+        FilterMaterial();
+        ColorFilter($('#filterOrd'), ((val == '') ? false : true));
+    }
+
+    // Filtro Ricevute
+    function FilterRecive(val) {
+        $filterRecive = $.trim(val).replace(/ +/g, ' ').toLowerCase();
+        FilterMaterial();
+        ColorFilter($('#filterRec'), ((val == '') ? false : true));
+    }
+
+    // Color Filter
+    function ColorFilter(obj, isSet) {
+        if (isSet) {
+            $(obj).addClass('yellow');
+        } else {
+            $(obj).removeClass('yellow');
+        }
+    }
+
+    function FilterMaterial() {
+        $rowsMaterial.show().filter(function () {
+            var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+            return !~text.indexOf($filterText) || !~text.indexOf($filterOrder) || !~text.indexOf($filterRecive);
+        }).hide();
+    }
+</script>
+
 
 @*Pupup*@
 <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
@@ -260,4 +467,14 @@
         $('#popup').dialog('close')
     }
 </script>
+
+@*Risposta di eliminazione*@
+@if (TempData["DeleteMessage"] != null)
+{
+    <script>
+        alert('@TempData["DeleteMessage"]');
+    </script>
+}
+
+
 

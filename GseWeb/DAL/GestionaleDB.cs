@@ -12,6 +12,7 @@ namespace GseWeb.DAL
     using System.Data.Entity.Core.Objects;
     using Models;
     using System.Collections;
+    using Models.Materials;
 
     public class GestionaleDB : DbContext
     {
@@ -28,8 +29,6 @@ namespace GseWeb.DAL
         public virtual DbSet<Role> UserRoles { get; set; }
         public virtual DbSet<Profile> HoursProfiles { get; set; }
         public virtual DbSet<Hour> Hours { get; set; }
-        //public virtual DbSet<HourResult> HourResults { get; set; }
-        //public virtual DbSet<WorkType> WorkTypes { get; set; }
         public virtual DbSet<Festivity> Festivities { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<UserOrder> UsersOrders { get; set; }
@@ -38,7 +37,7 @@ namespace GseWeb.DAL
         public virtual DbSet<WorkVehicle> WorkVehicles { get; set; }
         public virtual DbSet<Holiday> Holidays { get; set; }
         public virtual DbSet<MonthFrozen> MonthsFrozen { get; set; }
-        //public virtual DbSet<NewHour> NewHours { get; set; }
+        public virtual DbSet<Material> Materials { get; set; }
 
 
         // Intercetto il salvaggio dei dati per verificare se il mese e congelato
